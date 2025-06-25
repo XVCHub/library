@@ -2072,8 +2072,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 		local Tab = {}
 
-        --CreateDialog
-        
         function Rayfield:CreateChangelogDialog(config)
             local changelogText = type(config) == "string" and config or (type(config) == "table" and config.ChangelogText or "")
             local showSearchBar = type(config) == "table" and config.Search ~= false
