@@ -2074,7 +2074,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
         --CreateDialog
         
-        function Rayfield:CreateChangelogDialog(config)
+        function RayfieldLibrary:CreateChangelogDialog(config)
             local changelogText = type(config) == "string" and config or (type(config) == "table" and config.ChangelogText or "")
             local showSearchBar = type(config) == "table" and config.Search ~= false
             local dialogTitle = type(config) == "table" and config.Title or "XVC Hub - Changelog"
