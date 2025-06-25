@@ -2071,20 +2071,21 @@ function RayfieldLibrary:CreateWindow(Settings)
 		end)
 
 		local Tab = {}
-        function Rayfield:CreateChangelogDialog(config)
+
+        function RayfieldLibrary:CreateChangelogDialog(config)
             local changelogText = type(config) == "string" and config or (type(config) == "table" and config.ChangelogText or "")
-            local showSearchBar = type(config) == "table" and config.Search ~= false
-            local dialogTitle = type(config) == "table" and config.Title or "XVC Hub - Changelog"
-            local notificationsEnabled = type(config) == "table" and config.Notifications ~= false
+            local showSearchBar = type(config) == "table" and config.Search ~= false -- Default to true if unspecified
+            local dialogTitle = type(config) == "table" and config.Title or "XVC Hub - Changelog" -- Configurable title
+            local notificationsEnabled = type(config) == "table" and config.Notifications ~= false -- New: Notification toggle, default to true
             local altButton = type(config) == "table" and config.Altbutton or { Name = "Join Discord", Clipboard = "discord.gg/rTw5M8dRXN" } -- Default to Join Discord
-            local notification = type(config) == "table" and config.Notification or { Title = "Changelog Closed", Content = "The Changelog has been closed", Duration = 3, Image = 10723346871 } -- Default close notification
+            local notification = type(config) == "table" and config.Notification or { Title = "Changelog Closed", Content = "The changelog has been closed", Duration = 2.5, Image = 10723346871 } -- Default close notification
             local altButtonNotification = type(config) == "table" and config.AltbuttonNotification or {
-                Success = { Title = altButton.Name .. " Copied", Content = "The link has been copied to your clipboard!", Duration = 5, Image = 10709798443 },
-                Failure = { Title = altButton.Name .. " Failed", Content = "Your executor doesn't support setclipboard.", Duration = 5, Image = 10709799124 }
-            }
+                Success = { Title = altButton.Name .. " Copied", Content = "The link has been copied to your clipboard!", Duration = 6.5, Image = 10709798443 },
+                Failure = { Title = altButton.Name .. " Failed", Content = "Your executor doesn't support setclipboard.", Duration = 6.5, Image = 10709799124 }
+            } -- Default alt button notifications
             if changelogText == "" then
                 changelogText = [[
-                Version: Build 1.0
+                Version: Build 4.8 (jumped since big update)
                 Release Date: ???
 
                 What's New
@@ -2125,16 +2126,19 @@ function RayfieldLibrary:CreateWindow(Settings)
             ChangelogDialog.Visible = false
             ChangelogDialog.Parent = Rayfield
 
+            -- Dialog Corner
             local DialogCorner = Instance.new("UICorner")
             DialogCorner.CornerRadius = UDim.new(0, 6)
             DialogCorner.Parent = ChangelogDialog
 
+            -- Dialog Stroke
             local DialogStroke = Instance.new("UIStroke")
             DialogStroke.Color = SelectedTheme.ElementStroke
             DialogStroke.Thickness = 1
             DialogStroke.Transparency = 0
             DialogStroke.Parent = ChangelogDialog
 
+            -- Dialog Shadow
             local DialogShadow = Instance.new("ImageLabel")
             DialogShadow.Name = "Shadow"
             DialogShadow.Image = "rbxassetid://1316045217"
@@ -2148,6 +2152,7 @@ function RayfieldLibrary:CreateWindow(Settings)
             DialogShadow.ZIndex = 99
             DialogShadow.Parent = ChangelogDialog
 
+            -- Dialog Title
             local DialogTitle = Instance.new("TextLabel")
             DialogTitle.Name = "Title"
             DialogTitle.Size = UDim2.new(1, -20, 0, 30)
@@ -2161,6 +2166,7 @@ function RayfieldLibrary:CreateWindow(Settings)
             DialogTitle.ZIndex = 101
             DialogTitle.Parent = ChangelogDialog
 
+            -- Search Bar (Conditional)
             local SearchBar, SearchStroke, SearchIcon, SearchInput
             if showSearchBar then
                 SearchBar = Instance.new("Frame")
@@ -2184,7 +2190,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
                 SearchIcon = Instance.new("ImageLabel")
                 SearchIcon.Name = "SearchIcon"
-                SearchIcon.Image = "rbxassetid://10734943674"
+                SearchIcon.Image = "rbxassetid://10734943674" -- Default search icon; replace with Lucide if available
                 SearchIcon.ImageColor3 = SelectedTheme.TextColor or Color3.fromRGB(255, 255, 255)
                 SearchIcon.ImageTransparency = 0.5
                 SearchIcon.BackgroundTransparency = 1
@@ -2210,6 +2216,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 SearchInput.Parent = SearchBar
             end
 
+            -- Changelog Scroll
             local ChangelogScroll = Instance.new("ScrollingFrame")
             ChangelogScroll.Name = "ChangelogScroll"
             ChangelogScroll.Size = UDim2.new(1, -20, 1, isMobile and (showSearchBar and -125 or -90) or (showSearchBar and -150 or -110))
@@ -2265,6 +2272,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 ChangelogScroll.CanvasSize = UDim2.new(0, 0, 0, ScrollListLayout.AbsoluteContentSize.Y)
             end)
 
+            -- Search Functionality (Conditional)
             if showSearchBar then
                 SearchInput:GetPropertyChangedSignal("Text"):Connect(function()
                     local query = SearchInput.Text:lower()
@@ -2290,6 +2298,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 end)
             end
 
+            -- Close Button
             local CloseButton = Instance.new("TextButton")
             CloseButton.Name = "CloseButton"
             CloseButton.Size = UDim2.new(0, isMobile and 60 or 80, 0, isMobile and 25 or 30)
@@ -2319,6 +2328,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TweenService:Create(CloseButton, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
             end)
 
+            -- Alternate Button (Configurable)
             local AltButton = Instance.new("TextButton")
             AltButton.Name = "AltButton"
             AltButton.Size = UDim2.new(0, isMobile and 100 or 120, 0, isMobile and 25 or 30)
@@ -2351,7 +2361,7 @@ function RayfieldLibrary:CreateWindow(Settings)
             AltButton.MouseButton1Click:Connect(function()
                 if setclipboard then
                     setclipboard(altButton.Clipboard)
-                    if notificationsEnabled then
+                    if notificationsEnabled then -- New: Only show notification if enabled
                         RayfieldLibrary:Notify({
                             Title = altButtonNotification.Success.Title or (altButton.Name .. " Copied"),
                             Content = altButtonNotification.Success.Content or "The link has been copied to your clipboard!",
@@ -2360,7 +2370,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                         })
                     end
                 else
-                    if notificationsEnabled then
+                    if notificationsEnabled then -- New: Only show notification if enabled
                         RayfieldLibrary:Notify({
                             Title = altButtonNotification.Failure.Title or (altButton.Name .. " Failed"),
                             Content = altButtonNotification.Failure.Content or "Your executor doesn't support setclipboard.",
@@ -2437,11 +2447,11 @@ function RayfieldLibrary:CreateWindow(Settings)
                 task.wait(0.2)
                 ChangelogDialog:Destroy()
 
-                if notificationsEnabled then
+                if notificationsEnabled then -- New: Only show notification if enabled
                     RayfieldLibrary:Notify({
                         Title = notification.Title or "Changelog Closed",
                         Content = notification.Content or "The changelog has been closed",
-                        Duration = notification.Duration or 3,
+                        Duration = notification.Duration or 2.5,
                         Image = notification.Image or 10723346871
                     })
                 end
@@ -2489,6 +2499,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 Hide = hideDialog
             }
         end
+
 		-- Button
 		function Tab:CreateButton(ButtonSettings)
 			local ButtonValue = {}
