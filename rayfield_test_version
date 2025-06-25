@@ -14,8 +14,8 @@ if debugX then
 end
 
 local function getService(name)
-	local service = game:GetService(name)
-	return if cloneref then cloneref(service) else service
+    local service = game:GetService(name)
+    return if cloneref then cloneref(service) else service
 end
 
 -- Loads and executes a function hosted on a remote URL. Cancels the request if the requested URL takes too long to respond.
@@ -70,7 +70,7 @@ end
 
 local requestsDisabled = true --getgenv and getgenv().DISABLE_RAYFIELD_REQUESTS
 local InterfaceBuild = '3K3W'
-local Release = "Build 1.673"
+local Release = "Build 1.672"
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
@@ -123,7 +123,7 @@ local request = (syn and syn.request) or (fluxus and fluxus.request) or (http an
 
 local function loadSettings()
 	local file = nil
-
+	
 	local success, result =	pcall(function()
 		task.spawn(function()
 			if isfolder and isfolder(RayfieldFolder) then
@@ -172,7 +172,7 @@ local function loadSettings()
 			settingsInitialized = true
 		end)
 	end)
-
+	
 	if not success then 
 		if writefile then
 			warn('Rayfield had an issue accessing configuration saving capability.')
@@ -1174,7 +1174,7 @@ local function Hide(notify: boolean?)
 	Debounce = true
 	if notify then
 		if useMobilePrompt then 
-			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.", Duration = 7, Image = 4400697855})
+			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show Rayfield'.", Duration = 7, Image = 4400697855})
 		else
 			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = `The interface has been hidden, you can unhide the interface by tapping {getSetting("General", "rayfieldOpen")}.`, Duration = 7, Image = 4400697855})
 		end
@@ -1266,15 +1266,6 @@ local function Maximise()
 					if element.Name ~= "SectionSpacing" and element.Name ~= "Placeholder" then
 						if element.Name == "SectionTitle" or element.Name == 'SearchTitle-fsefsefesfsefesfesfThanks' then
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.4}):Play()
-                        elseif element.Name == "Label" then
-                            element.Icon.ImageTransparency = 1
-                            element.BackgroundTransparency = 1
-                            element.UIStroke.Transparency = 1
-                            element.Title.TextTransparency = 1
-                            TweenService:Create(element, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.8}):Play()
-                            TweenService:Create(element.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-                            TweenService:Create(element.Icon, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
-                            TweenService:Create(element.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 						elseif element.Name == 'Divider' then
 							TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.85}):Play()
 						else
@@ -1382,17 +1373,8 @@ local function Unhide()
 					if element.Name ~= "SectionSpacing" and element.Name ~= "Placeholder" then
 						if element.Name == "SectionTitle" or element.Name == 'SearchTitle-fsefsefesfsefesfesfThanks' then
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.4}):Play()
-                        elseif element.Name == "Label" then
-                            element.Icon.ImageTransparency = 1
-                            element.BackgroundTransparency = 1
-                            element.UIStroke.Transparency = 1
-                            element.Title.TextTransparency = 1
-                            TweenService:Create(element, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.8}):Play()
-                            TweenService:Create(element.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-                            TweenService:Create(element.Icon, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
-                            TweenService:Create(element.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()	
 						elseif element.Name == 'Divider' then
-							TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
+							TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.85}):Play()
 						else
 							TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
@@ -1619,13 +1601,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 	LoadingFrame.Title.TextTransparency = 1
 	LoadingFrame.Subtitle.TextTransparency = 1
 
-	local uiCorner = Main:FindFirstChildOfClass("UICorner") or Instance.new("UICorner", Main)
-	uiCorner.CornerRadius = UDim.new(0, 11)
-
-	if Settings.ShowText then
-		MPrompt.Title.Text = 'Show '..Settings.ShowText
-	end
-
 	LoadingFrame.Version.TextTransparency = 1
 	LoadingFrame.Title.Text = Settings.LoadingTitle or "Rayfield"
 	LoadingFrame.Subtitle.Text = Settings.LoadingSubtitle or "Interface Suite"
@@ -1681,8 +1656,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 			while true do
 				task.wait(math.random(180, 600))
 				RayfieldLibrary:Notify({
-					Title = "Skibidi Hub",
-					Content = "Enjoying this Script? Find it at https://discord.gg/dtneYN6NTY",
+					Title = "XVC Hub",
+					Content = "Enjoying this Script Hub? Find it at discord.gg/rTw5M8dRXN",
 					Duration = 7,
 					Image = 4370033185,
 				})
@@ -2005,9 +1980,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 52, 0, 30)
 		end
 
-		local TabButtonCorner = TabButton:FindFirstChildOfClass("UICorner") or Instance.new("UICorner")
-        TabButtonCorner.CornerRadius = UDim.new(0, 9)
-        TabButtonCorner.Parent = TabButton
+
 
 		TabButton.BackgroundTransparency = 1
 		TabButton.Title.TextTransparency = 1
@@ -2099,20 +2072,22 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 		local Tab = {}
 
-        function RayfieldLibrary:CreateChangelogDialog(config)
+        --CreateDialog
+        
+        function Rayfield:CreateChangelogDialog(config)
             local changelogText = type(config) == "string" and config or (type(config) == "table" and config.ChangelogText or "")
-            local showSearchBar = type(config) == "table" and config.Search ~= false -- Default to true if unspecified
-            local dialogTitle = type(config) == "table" and config.Title or "Skibidi Hub - Changelog" -- Configurable title
-            local notificationsEnabled = type(config) == "table" and config.Notifications ~= false -- New: Notification toggle, default to true
-            local altButton = type(config) == "table" and config.Altbutton or { Name = "Join Discord", Clipboard = "https://discord.gg/dtneYN6NTY" } -- Default to Join Discord
-            local notification = type(config) == "table" and config.Notification or { Title = "Changelog Closed", Content = "The changelog has been closed", Duration = 2.5, Image = 10723346871 } -- Default close notification
+            local showSearchBar = type(config) == "table" and config.Search ~= false
+            local dialogTitle = type(config) == "table" and config.Title or "XVC Hub - Changelog"
+            local notificationsEnabled = type(config) == "table" and config.Notifications ~= false
+            local altButton = type(config) == "table" and config.Altbutton or { Name = "Join Discord", Clipboard = "discord.gg/rTw5M8dRXN" } -- Default to Join Discord
+            local notification = type(config) == "table" and config.Notification or { Title = "Changelog Closed", Content = "The Changelog has been closed", Duration = 3, Image = 10723346871 } -- Default close notification
             local altButtonNotification = type(config) == "table" and config.AltbuttonNotification or {
-                Success = { Title = altButton.Name .. " Copied", Content = "The link has been copied to your clipboard!", Duration = 6.5, Image = 10709798443 },
-                Failure = { Title = altButton.Name .. " Failed", Content = "Your executor doesn't support setclipboard.", Duration = 6.5, Image = 10709799124 }
-            } -- Default alt button notifications
+                Success = { Title = altButton.Name .. " Copied", Content = "The link has been copied to your clipboard!", Duration = 5, Image = 10709798443 },
+                Failure = { Title = altButton.Name .. " Failed", Content = "Your executor doesn't support setclipboard.", Duration = 5, Image = 10709799124 }
+            }
             if changelogText == "" then
                 changelogText = [[
-                Version: Build 4.8 (jumped since big update)
+                Version: Build 1.0
                 Release Date: ???
 
                 What's New
@@ -2153,19 +2128,16 @@ function RayfieldLibrary:CreateWindow(Settings)
             ChangelogDialog.Visible = false
             ChangelogDialog.Parent = Rayfield
 
-            -- Dialog Corner
             local DialogCorner = Instance.new("UICorner")
             DialogCorner.CornerRadius = UDim.new(0, 6)
             DialogCorner.Parent = ChangelogDialog
 
-            -- Dialog Stroke
             local DialogStroke = Instance.new("UIStroke")
             DialogStroke.Color = SelectedTheme.ElementStroke
             DialogStroke.Thickness = 1
             DialogStroke.Transparency = 0
             DialogStroke.Parent = ChangelogDialog
 
-            -- Dialog Shadow
             local DialogShadow = Instance.new("ImageLabel")
             DialogShadow.Name = "Shadow"
             DialogShadow.Image = "rbxassetid://1316045217"
@@ -2179,7 +2151,6 @@ function RayfieldLibrary:CreateWindow(Settings)
             DialogShadow.ZIndex = 99
             DialogShadow.Parent = ChangelogDialog
 
-            -- Dialog Title
             local DialogTitle = Instance.new("TextLabel")
             DialogTitle.Name = "Title"
             DialogTitle.Size = UDim2.new(1, -20, 0, 30)
@@ -2193,7 +2164,6 @@ function RayfieldLibrary:CreateWindow(Settings)
             DialogTitle.ZIndex = 101
             DialogTitle.Parent = ChangelogDialog
 
-            -- Search Bar (Conditional)
             local SearchBar, SearchStroke, SearchIcon, SearchInput
             if showSearchBar then
                 SearchBar = Instance.new("Frame")
@@ -2217,7 +2187,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
                 SearchIcon = Instance.new("ImageLabel")
                 SearchIcon.Name = "SearchIcon"
-                SearchIcon.Image = "rbxassetid://10734943674" -- Default search icon; replace with Lucide if available
+                SearchIcon.Image = "rbxassetid://10734943674"
                 SearchIcon.ImageColor3 = SelectedTheme.TextColor or Color3.fromRGB(255, 255, 255)
                 SearchIcon.ImageTransparency = 0.5
                 SearchIcon.BackgroundTransparency = 1
@@ -2243,7 +2213,6 @@ function RayfieldLibrary:CreateWindow(Settings)
                 SearchInput.Parent = SearchBar
             end
 
-            -- Changelog Scroll
             local ChangelogScroll = Instance.new("ScrollingFrame")
             ChangelogScroll.Name = "ChangelogScroll"
             ChangelogScroll.Size = UDim2.new(1, -20, 1, isMobile and (showSearchBar and -125 or -90) or (showSearchBar and -150 or -110))
@@ -2299,7 +2268,6 @@ function RayfieldLibrary:CreateWindow(Settings)
                 ChangelogScroll.CanvasSize = UDim2.new(0, 0, 0, ScrollListLayout.AbsoluteContentSize.Y)
             end)
 
-            -- Search Functionality (Conditional)
             if showSearchBar then
                 SearchInput:GetPropertyChangedSignal("Text"):Connect(function()
                     local query = SearchInput.Text:lower()
@@ -2325,7 +2293,6 @@ function RayfieldLibrary:CreateWindow(Settings)
                 end)
             end
 
-            -- Close Button
             local CloseButton = Instance.new("TextButton")
             CloseButton.Name = "CloseButton"
             CloseButton.Size = UDim2.new(0, isMobile and 60 or 80, 0, isMobile and 25 or 30)
@@ -2355,7 +2322,6 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TweenService:Create(CloseButton, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
             end)
 
-            -- Alternate Button (Configurable)
             local AltButton = Instance.new("TextButton")
             AltButton.Name = "AltButton"
             AltButton.Size = UDim2.new(0, isMobile and 100 or 120, 0, isMobile and 25 or 30)
@@ -2388,7 +2354,7 @@ function RayfieldLibrary:CreateWindow(Settings)
             AltButton.MouseButton1Click:Connect(function()
                 if setclipboard then
                     setclipboard(altButton.Clipboard)
-                    if notificationsEnabled then -- New: Only show notification if enabled
+                    if notificationsEnabled then
                         RayfieldLibrary:Notify({
                             Title = altButtonNotification.Success.Title or (altButton.Name .. " Copied"),
                             Content = altButtonNotification.Success.Content or "The link has been copied to your clipboard!",
@@ -2397,7 +2363,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                         })
                     end
                 else
-                    if notificationsEnabled then -- New: Only show notification if enabled
+                    if notificationsEnabled then
                         RayfieldLibrary:Notify({
                             Title = altButtonNotification.Failure.Title or (altButton.Name .. " Failed"),
                             Content = altButtonNotification.Failure.Content or "Your executor doesn't support setclipboard.",
@@ -2474,11 +2440,11 @@ function RayfieldLibrary:CreateWindow(Settings)
                 task.wait(0.2)
                 ChangelogDialog:Destroy()
 
-                if notificationsEnabled then -- New: Only show notification if enabled
+                if notificationsEnabled then
                     RayfieldLibrary:Notify({
                         Title = notification.Title or "Changelog Closed",
                         Content = notification.Content or "The changelog has been closed",
-                        Duration = notification.Duration or 2.5,
+                        Duration = notification.Duration or 3,
                         Image = notification.Image or 10723346871
                     })
                 end
@@ -2529,101 +2495,72 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 		-- Button
 		function Tab:CreateButton(ButtonSettings)
-            local ButtonValue = {}
+			local ButtonValue = {}
 
-            local Button = Elements.Template.Button:Clone()
-            Button.Name = ButtonSettings.Name
-            Button.Title.Text = ButtonSettings.Name
-            Button.Visible = true
-            Button.Parent = TabPage
+			local Button = Elements.Template.Button:Clone()
+			Button.Name = ButtonSettings.Name
+			Button.Title.Text = ButtonSettings.Name
+			Button.Visible = true
+			Button.Parent = TabPage
 
-            if Button:FindFirstChild("UICorner") then
-                Button.UICorner.CornerRadius = UDim.new(0, 2)
-            end
+			Button.BackgroundTransparency = 1
+			Button.UIStroke.Transparency = 1
+			Button.Title.TextTransparency = 1
 
-            Button.BackgroundTransparency = 1
-            Button.UIStroke.Transparency = 1
-            Button.Title.TextTransparency = 1
+			TweenService:Create(Button, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+			TweenService:Create(Button.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+			TweenService:Create(Button.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()	
 
-            local ElementIndicator
-            if Button:FindFirstChild("ElementIndicator") then
-                ElementIndicator = Button.ElementIndicator
-                if ElementIndicator:IsA("TextLabel") then
-                    ElementIndicator:Destroy()
-                    ElementIndicator = Instance.new("ImageLabel")
-                    ElementIndicator.Name = "ElementIndicator"
-                    ElementIndicator.Parent = Button
-                end
-            else
-                ElementIndicator = Instance.new("ImageLabel")
-                ElementIndicator.Name = "ElementIndicator"
-                ElementIndicator.Parent = Button
-            end
 
-            ElementIndicator.Size = UDim2.new(0, 20, 0, 20)
-            ElementIndicator.Position = UDim2.new(1, -10, 0.5, 0)
-            ElementIndicator.AnchorPoint = Vector2.new(1, 0.5)
-            ElementIndicator.BackgroundTransparency = 1
-            ElementIndicator.Image = "rbxassetid://10723375250"
-            ElementIndicator.ImageTransparency = 0.3
-            ElementIndicator.ZIndex = 3
-            ElementIndicator.ImageColor3 = Color3.fromRGB(200, 200, 200)
+			Button.Interact.MouseButton1Click:Connect(function()
+				local Success, Response = pcall(ButtonSettings.Callback)
+				-- Prevents animation from trying to play if the button's callback called RayfieldLibrary:Destroy()
+				if rayfieldDestroyed then
+					return
+				end
+				if not Success then
+					TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+					TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+					TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+					Button.Title.Text = "Callback Error"
+					print("Rayfield | "..ButtonSettings.Name.." Callback Error " ..tostring(Response))
+					warn('Check docs.sirius.menu for help with Rayfield specific development.')
+					task.wait(0.5)
+					Button.Title.Text = ButtonSettings.Name
+					TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
+					TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 0.9}):Play()
+					TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+				else
+					if not ButtonSettings.Ext then
+						SaveConfiguration(ButtonSettings.Name..'\n')
+					end
+					TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackgroundHover}):Play()
+					TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+					TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+					task.wait(0.2)
+					TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
+					TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 0.9}):Play()
+					TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+				end
+			end)
 
-            for _, child in pairs(Button:GetChildren()) do
-                if child:IsA("ImageLabel") and child.Name ~= "ElementIndicator" then
-                    child.Visible = false
-                end
-            end
+			Button.MouseEnter:Connect(function()
+				TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackgroundHover}):Play()
+				TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 0.7}):Play()
+			end)
 
-            TweenService:Create(Button, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-            TweenService:Create(Button.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-            TweenService:Create(Button.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()	
+			Button.MouseLeave:Connect(function()
+				TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
+				TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 0.9}):Play()
+			end)
 
-            Button.Interact.MouseButton1Click:Connect(function()
-                local Success, Response = pcall(ButtonSettings.Callback)
-                if not Success then
-                    TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-                    TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-                    TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-                    Button.Title.Text = "Callback Error"
-                    print("Rayfield | "..ButtonSettings.Name.." Callback Error " ..tostring(Response))
-                    warn('Check docs.sirius.menu for help with Rayfield specific development.')
-                    task.wait(0.5)
-                    Button.Title.Text = ButtonSettings.Name
-                    TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
-                    TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.3}):Play()
-                    TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-                else
-                    if not ButtonSettings.Ext then
-                        SaveConfiguration(ButtonSettings.Name..'\n')
-                    end
-                    TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackgroundHover}):Play()
-                    TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-                    TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-                    task.wait(0.2)
-                    TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
-                    TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.3}):Play()
-                    TweenService:Create(Button.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-                end
-            end)
+			function ButtonValue:Set(NewButton)
+				Button.Title.Text = NewButton
+				Button.Name = NewButton
+			end
 
-            Button.MouseEnter:Connect(function()
-                TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackgroundHover}):Play()
-                TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.1}):Play()
-            end)
-
-            Button.MouseLeave:Connect(function()
-                TweenService:Create(Button, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
-                TweenService:Create(Button.ElementIndicator, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.3}):Play()
-            end)
-
-            function ButtonValue:Set(NewButton)
-                Button.Title.Text = NewButton
-                Button.Name = NewButton
-            end
-
-            return ButtonValue
-        end
+			return ButtonValue
+		end
 
 		-- ColorPicker
 		function Tab:CreateColorPicker(ColorPickerSettings) -- by Throit
@@ -2648,14 +2585,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			ColorPicker.HexInput.Position = UDim2.new(0, 17, 0, 90)
 			Main.ImageTransparency = 1
 			Background.BackgroundTransparency = 1
-
-            if ColorPicker:FindFirstChild("UICorner") then
-				ColorPicker.UICorner.CornerRadius = UDim.new(0, 4)
-			else
-				local UICorner = Instance.new("UICorner")
-				UICorner.CornerRadius = UDim.new(0, 4)
-				UICorner.Parent = ColorPicker
-			end
 
 			for _, rgbinput in ipairs(ColorPicker.RGB:GetChildren()) do
 				if rgbinput:IsA("Frame") then
@@ -2942,14 +2871,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Label.Visible = true
 			Label.Parent = TabPage
 
-            if Label:FindFirstChild("UICorner") then
-				Label.UICorner.CornerRadius = UDim.new(0, 4)
-			else
-				local UICorner = Instance.new("UICorner")
-				UICorner.CornerRadius = UDim.new(0, 4)
-				UICorner.Parent = Label
-			end
-
 			Label.BackgroundColor3 = Color or SelectedTheme.SecondaryElementBackground
 			Label.UIStroke.Color = Color or SelectedTheme.SecondaryElementStroke
 
@@ -2992,110 +2913,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Label.BackgroundTransparency = 1
 			Label.UIStroke.Transparency = 1
 			Label.Title.TextTransparency = 1
+
 			TweenService:Create(Label, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = Color and 0.8 or 0}):Play()
-			TweenService:Create(Label.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = Color and 0 or 0}):Play()
-			TweenService:Create(Label.Icon, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
-			TweenService:Create(Label.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = Color and 0.2 or 0}):Play()	
-
-			function LabelValue:Set(NewLabel, Icon, Color)
-				Label.Title.Text = NewLabel
-
-				if Color then
-					Label.BackgroundColor3 = Color or SelectedTheme.SecondaryElementBackground
-					Label.UIStroke.Color = Color or SelectedTheme.SecondaryElementStroke
-				end
-
-				if Icon and Label:FindFirstChild('Icon') then
-					Label.Title.Position = UDim2.new(0, 45, 0.5, 0)
-					Label.Title.Size = UDim2.new(1, -100, 0, 14)
-
-					if Icon then
-						if typeof(Icon) == 'string' and Icons then
-							local asset = getIcon(Icon)
-
-							Label.Icon.Image = 'rbxassetid://'..asset.id
-							Label.Icon.ImageRectOffset = asset.imageRectOffset
-							Label.Icon.ImageRectSize = asset.imageRectSize
-						else
-							Label.Icon.Image = getAssetUri(Icon)
-						end
-					else
-						Label.Icon.Image = "rbxassetid://" .. 0
-					end
-
-					Label.Icon.Visible = true
-				end
-			end
-
-			Rayfield.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
-				Label.BackgroundColor3 = IgnoreTheme and (Color or Label.BackgroundColor3) or SelectedTheme.SecondaryElementBackground
-				Label.UIStroke.Color = IgnoreTheme and (Color or Label.BackgroundColor3) or SelectedTheme.SecondaryElementStroke
-			end)
-
-			return LabelValue
-		end
-
-		-- Label
-		function Tab:CreateLabel(LabelText : string, Icon: number, Color : Color3, IgnoreTheme : boolean)
-			local LabelValue = {}
-
-			local Label = Elements.Template.Label:Clone()
-			Label.Title.Text = LabelText
-			Label.Visible = true
-			Label.Parent = TabPage
-
-            if Label:FindFirstChild("UICorner") then
-				Label.UICorner.CornerRadius = UDim.new(0, 4)
-			else
-				local UICorner = Instance.new("UICorner")
-				UICorner.CornerRadius = UDim.new(0, 4)
-				UICorner.Parent = Label
-			end
-
-			Label.BackgroundColor3 = Color or SelectedTheme.SecondaryElementBackground
-			Label.UIStroke.Color = Color or SelectedTheme.SecondaryElementStroke
-
-			if Icon then
-				if typeof(Icon) == 'string' and Icons then
-					local asset = getIcon(Icon)
-
-					Label.Icon.Image = 'rbxassetid://'..asset.id
-					Label.Icon.ImageRectOffset = asset.imageRectOffset
-					Label.Icon.ImageRectSize = asset.imageRectSize
-				else
-					Label.Icon.Image = getAssetUri(Icon)
-				end
-			else
-				Label.Icon.Image = "rbxassetid://" .. 0
-			end
-
-			if Icon and Label:FindFirstChild('Icon') then
-				Label.Title.Position = UDim2.new(0, 45, 0.5, 0)
-				Label.Title.Size = UDim2.new(1, -100, 0, 14)
-
-				if Icon then
-					if typeof(Icon) == 'string' and Icons then
-						local asset = getIcon(Icon)
-
-						Label.Icon.Image = 'rbxassetid://'..asset.id
-						Label.Icon.ImageRectOffset = asset.imageRectOffset
-						Label.Icon.ImageRectSize = asset.imageRectSize
-					else
-						Label.Icon.Image = getAssetUri(Icon)
-					end
-				else
-					Label.Icon.Image = "rbxassetid://" .. 0
-				end
-
-				Label.Icon.Visible = true
-			end
-
-			Label.Icon.ImageTransparency = 1
-			Label.BackgroundTransparency = 1
-			Label.UIStroke.Transparency = 1
-			Label.Title.TextTransparency = 1
-			TweenService:Create(Label, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = Color and 0.8 or 0}):Play()
-			TweenService:Create(Label.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = Color and 0 or 0}):Play()
+			TweenService:Create(Label.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = Color and 0.7 or 0}):Play()
 			TweenService:Create(Label.Icon, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 			TweenService:Create(Label.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = Color and 0.2 or 0}):Play()	
 
@@ -3146,14 +2966,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Paragraph.Content.Text = ParagraphSettings.Content
 			Paragraph.Visible = true
 			Paragraph.Parent = TabPage
-            
-            if Paragraph:FindFirstChild("UICorner") then
-				Paragraph.UICorner.CornerRadius = UDim.new(0, 4)
-			else
-				local UICorner = Instance.new("UICorner")
-				UICorner.CornerRadius = UDim.new(0, 4)
-				UICorner.Parent = Paragraph
-			end
 
 			Paragraph.BackgroundTransparency = 1
 			Paragraph.UIStroke.Transparency = 1
@@ -3188,15 +3000,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.Title.Text = InputSettings.Name
 			Input.Visible = true
 			Input.Parent = TabPage
-
-            local inputCorner = Input:FindFirstChildOfClass("UICorner")
-			if inputCorner then
-				inputCorner.CornerRadius = UDim.new(0, 4)
-			else
-				local newCorner = Instance.new("UICorner")
-				newCorner.CornerRadius = UDim.new(0, 4)
-				newCorner.Parent = Input
-			end
 
 			Input.BackgroundTransparency = 1
 			Input.UIStroke.Transparency = 1
@@ -3291,11 +3094,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Dropdown.Title.Text = DropdownSettings.Name
 			Dropdown.Visible = true
 			Dropdown.Parent = TabPage
-
-            local corner = Dropdown:FindFirstChildOfClass("UICorner")
-			if corner then
-				corner.CornerRadius = UDim.new(0, 4)
-			end
 
 			Dropdown.List.Visible = false
 			if DropdownSettings.CurrentOption then
@@ -3612,11 +3410,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Keybind.Visible = true
 			Keybind.Parent = TabPage
 
-            local keybindCorner = Keybind:FindFirstChildOfClass("UICorner")
-			if keybindCorner then
-				keybindCorner.CornerRadius = UDim.new(0, 4)
-			end
-
 			Keybind.BackgroundTransparency = 1
 			Keybind.UIStroke.Transparency = 1
 			Keybind.Title.TextTransparency = 1
@@ -3748,27 +3541,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Toggle.Title.Text = ToggleSettings.Name
 			Toggle.Visible = true
 			Toggle.Parent = TabPage
-
-            local ToggleCorner = Toggle:FindFirstChildOfClass("UICorner")
-            if not ToggleCorner then
-                ToggleCorner = Instance.new("UICorner")
-                ToggleCorner.Parent = Toggle
-            end
-            ToggleCorner.CornerRadius = UDim.new(0, 4)
-
-            local SwitchCorner = Toggle.Switch:FindFirstChildOfClass("UICorner")
-            if not SwitchCorner then
-                SwitchCorner = Instance.new("UICorner")
-                SwitchCorner.Parent = Toggle.Switch
-            end
-            SwitchCorner.CornerRadius = UDim.new(0, 8)
-
-            local IndicatorCorner = Toggle.Switch.Indicator:FindFirstChildOfClass("UICorner")
-            if not IndicatorCorner then
-                IndicatorCorner = Instance.new("UICorner")
-                IndicatorCorner.Parent = Toggle.Switch.Indicator
-            end
-            IndicatorCorner.CornerRadius = UDim.new(0, 6)
 
 			Toggle.BackgroundTransparency = 1
 			Toggle.UIStroke.Transparency = 1
@@ -3939,9 +3711,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Slider.Title.Text = SliderSettings.Name
 			Slider.Visible = true
 			Slider.Parent = TabPage
-
-            local SliderCorner = Slider:FindFirstChildOfClass("UICorner") or Instance.new("UICorner")
-            SliderCorner.CornerRadius = UDim.new(0, 4)
 
 			Slider.BackgroundTransparency = 1
 			Slider.UIStroke.Transparency = 1
@@ -4184,9 +3953,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 	local success, result = pcall(function()
 		createSettings(Window)
 	end)
-
+	
 	if not success then warn('Rayfield had an issue creating settings.') end
-
+	
 	return Window
 end
 
