@@ -2247,7 +2247,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.TextWrapped = true
                 TextLabel.LayoutOrder = layoutOrder
                 TextLabel.ZIndex = 102
-                if isHeader and (text == "[+] Added Features" or text == "[+] Updated Games" or text == "[-] Removed Features" or text == "[*] Improvements" or text == "[!] Known Issues" or text == "[?] Notes") then
+                if isHeader and (text == "[+] Added Features" or text == "[+] Added Games" or text == "[+] Updated Games Scripts" or text == "[-] Deleted Games" or text == "[-] Deleted Scripts]" or text == "[+] Bug Fixes" or text == "[-] Removed Features" or text == "[*] Improvements" or text == "[!] Known Issues" or text == "[?] Notes") then
                     TextLabel.BackgroundTransparency = 0
                     TextLabel.BackgroundColor3 = SelectedTheme.ElementBackgroundHover or Color3.fromRGB(60, 60, 60)
                     local HighlightCorner = Instance.new("UICorner")
