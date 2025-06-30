@@ -2261,7 +2261,7 @@ local originalLabels = {}
             local layoutOrder = 0
             for line in changelogText:gmatch("[^\r\n]+") do
                 line = line:match("^%s*(.-)%s*$")
-                local isHeader = line:match("") or line:match("^What's New$") or line:match("^Improvements$") or line:match("^Bug Fixes$") or line:match("^Known Issues$") or line:match("^Notes$") or line:match("^Version:") or line:match("^Release Date:") or line:match("^%[%+%]") or line:match("^%[%-%]") or line:match("^%[%*%]") or line:match("^%[!%]") or line:match("^%[%?%]")
+                local isHeader = line:match("skibidi")
                 local label = addTextLabel(line, isHeader, layoutOrder)
                 table.insert(originalLabels, {text = line, isHeader = isHeader, layoutOrder = layoutOrder})
                 layoutOrder = layoutOrder + 1
