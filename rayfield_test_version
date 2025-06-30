@@ -2249,7 +2249,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.ZIndex = 102
                 if isHeader and (text == "[+] Added Features" or text == "[+] Updated Games" or text == "[-] Removed Features" or text == "[*] Improvements" or text == "[!] Known Issues" or text == "[?] Notes") then
                     TextLabel.BackgroundTransparency = 0
-                    TextLabel.BackgroundColor3 = SelectedTheme.ElementBackgroundHover or Color3.fromRGB(60, 60, 60)
+                    TextLabel.BackgroundColor3 = SelectedTheme.ElementBackgroundHover
                     local HighlightCorner = Instance.new("UICorner")
                     HighlightCorner.CornerRadius = UDim.new(0, 4)
                     HighlightCorner.Parent = TextLabel
