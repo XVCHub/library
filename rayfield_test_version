@@ -2257,7 +2257,19 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.Parent = ChangelogScroll
                 return TextLabel
             end
+local originalLabels = {}
+            local layoutOrder = 0
+            for line in changelogText:gmatch("[^\r\n]+") do
+                line = line:match("^%s*(.-)%s*$")
+                local isHeader = line:match("") or line:match("^What's New$") or line:match("^Improvements$") or line:match("^Bug Fixes$") or line:match("^Known Issues$") or line:match("^Notes$") or line:match("^Version:") or line:match("^Release Date:") or line:match("^%[%+%]") or line:match("^%[%-%]") or line:match("^%[%*%]") or line:match("^%[!%]") or line:match("^%[%?%]")
+                local label = addTextLabel(line, isHeader, layoutOrder)
+                table.insert(originalLabels, {text = line, isHeader = isHeader, layoutOrder = layoutOrder})
+                layoutOrder = layoutOrder + 1
+            end
 
+            ScrollListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                ChangelogScroll.CanvasSize = UDim2.new(0, 0, 0, ScrollListLayout.AbsoluteContentSize.Y)
+            end)
             ScrollListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
                 ChangelogScroll.CanvasSize = UDim2.new(0, 0, 0, ScrollListLayout.AbsoluteContentSize.Y)
             end)
