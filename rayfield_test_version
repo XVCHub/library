@@ -2239,7 +2239,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.AutomaticSize = Enum.AutomaticSize.Y
                 TextLabel.BackgroundTransparency = 1
                 TextLabel.Text = text
-                TextLabel.TextColor3 = SelectedTheme.TextColor or Color3.fromRGB(255, 255, 255)
+                TextLabel.TextColor3 = SelectedTheme.TextColor
                 TextLabel.TextTransparency = 0
                 TextLabel.TextSize = isMobile and (isHeader and 18 or 16) or (isHeader and 22 or 18)
                 TextLabel.Font = isHeader and Enum.Font.SourceSansBold or Enum.Font.SourceSans
@@ -2247,9 +2247,9 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.TextWrapped = true
                 TextLabel.LayoutOrder = layoutOrder
                 TextLabel.ZIndex = 102
-                if isHeader and (text == "[+] Added Features" or text == "[+] Updated Games" or text == "[-] Removed Features" or text == "[*] Improvements" or text == "[!] Known Issues" or text == "[?] Notes") then
+                if isHeader and (text == "[+] Added Features" or text == "[+] Added Games" or text == "[+] Updated Games Scripts" or text == "[-] Deleted Games" or text == "[-] Deleted Scripts]" or text == "[+] Bug Fixes" or text == "[-] Removed Features" or text == "[*] Improvements" or text == "[!] Known Issues" or text == "[?] Notes") then
                     TextLabel.BackgroundTransparency = 0
-                    TextLabel.BackgroundColor3 = SelectedTheme.ElementBackgroundHover
+                    TextLabel.BackgroundColor3 = SelectedTheme.ElementBackgroundHover or Color3.fromRGB(60, 60, 60)
                     local HighlightCorner = Instance.new("UICorner")
                     HighlightCorner.CornerRadius = UDim.new(0, 4)
                     HighlightCorner.Parent = TextLabel
@@ -2257,19 +2257,17 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.Parent = ChangelogScroll
                 return TextLabel
             end
-local originalLabels = {}
+
+            local originalLabels = {}
             local layoutOrder = 0
             for line in changelogText:gmatch("[^\r\n]+") do
                 line = line:match("^%s*(.-)%s*$")
-                local isHeader = line:match("skibidi")
+                local isHeader = line:match("^%w+$") or line:match("^What's New$") or line:match("^Improvements$") or line:match("^Bug Fixes$") or line:match("^Known Issues$") or line:match("^Notes$") or line:match("^Version:") or line:match("^Release Date:") or line:match("^%[%+%]") or line:match("^%[%-%]") or line:match("^%[%*%]") or line:match("^%[!%]") or line:match("^%[%?%]")
                 local label = addTextLabel(line, isHeader, layoutOrder)
                 table.insert(originalLabels, {text = line, isHeader = isHeader, layoutOrder = layoutOrder})
                 layoutOrder = layoutOrder + 1
             end
 
-            ScrollListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-                ChangelogScroll.CanvasSize = UDim2.new(0, 0, 0, ScrollListLayout.AbsoluteContentSize.Y)
-            end)
             ScrollListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
                 ChangelogScroll.CanvasSize = UDim2.new(0, 0, 0, ScrollListLayout.AbsoluteContentSize.Y)
             end)
