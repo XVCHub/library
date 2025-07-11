@@ -2239,7 +2239,7 @@ function RayfieldLibrary:CreateWindow(Settings)
                 TextLabel.AutomaticSize = Enum.AutomaticSize.Y
                 TextLabel.BackgroundTransparency = 1
                 TextLabel.Text = text
-                TextLabel.TextColor3 = SelectedTheme.TextColor or Color3.fromRGB(255, 255, 255)
+                TextLabel.TextColor3 = SelectedTheme.TextColor
                 TextLabel.TextTransparency = 0
                 TextLabel.TextSize = isMobile and (isHeader and 18 or 16) or (isHeader and 22 or 18)
                 TextLabel.Font = isHeader and Enum.Font.SourceSansBold or Enum.Font.SourceSans
