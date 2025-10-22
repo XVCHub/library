@@ -1533,7 +1533,7 @@ local IconModule = {
 		["fire_extinguisher"] = "http://www.roblox.com/asset/?id=6035121913";
 		["sparkle"] = "http://www.roblox.com/asset/?id=4483362748",
 		["sword"] = "http://www.roblox.com/asset/?id=135517833070743",
-		["dollar_sign"] = "http://www.roblox.com/asset/?id=76033237434031"
+		["dollar_sign"] = "http://www.roblox.com/asset/?id=74445911334918"
 	}
 }
 
