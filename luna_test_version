@@ -1582,43 +1582,53 @@ local function GetIcon(icon, source)
 		return "rbxassetid://" .. icon
 	elseif source == "Lucide" then
 		-- full credit to latte softworks :)
-		local iconData = not isStudio and game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/refs/heads/master/lib/Icons.luau")
-		local icons = isStudio and IconModule.Lucide or loadstring(iconData)()
-		if not isStudio then
+		if isStudio then
+			return "rbxassetid://10723434557" -- Studio için default icon
+		end
+		
+		local success, result = pcall(function()
+			local iconData = game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/refs/heads/master/lib/Icons.luau")
+			local icons = loadstring(iconData)()
+			
 			icon = string.match(string.lower(icon), "^%s*(.*)%s*$") :: string
 			local sizedicons = icons['48px']
 
 			local r = sizedicons[icon]
 			if not r then
-				error("Lucide Icons: Failed to find icon by the name of \"" .. icon .. "\.", 2)
+				warn("Lucide Icons: Failed to find icon by the name of \"" .. icon .. "\"")
+				return "rbxassetid://10723434557" -- Default icon
 			end
 
 			local rirs = r[2]
 			local riro = r[3]
 
 			if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
-				error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+				warn("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+				return "rbxassetid://10723434557" -- Default icon
 			end
 
 			local irs = Vector2.new(rirs[1], rirs[2])
 			local iro = Vector2.new(riro[1], riro[2])
 
-			local asset = {
+			return {
 				id = r[1],
 				imageRectSize = irs,
 				imageRectOffset = iro,
 			}
-
-			return asset
+		end)
+		
+		if success then
+			return result
 		else
-			return "rbxassetid://10723434557"
+			warn("Lucide Icons Error: " .. tostring(result))
+			return "rbxassetid://10723434557" -- Default icon on error
 		end
 	else	
 		if icon ~= nil and IconModule[source] then
 			local sourceicon = IconModule[source]
-			return sourceicon[icon]
+			return sourceicon[icon] or "rbxassetid://10723434557" -- Default icon if not found
 		else
-			return nil
+			return "rbxassetid://10723434557" -- Default icon
 		end
 	end
 end
