@@ -1583,7 +1583,7 @@ local function GetIcon(icon, source)
 	elseif source == "Lucide" then
 		-- full credit to latte softworks :)
 		if isStudio then
-			return "rbxassetid://10723434557" -- Studio için default icon
+			return "rbxassetid://10723434557" -- Studio icon
 		end
 		
 		local success, result = pcall(function()
