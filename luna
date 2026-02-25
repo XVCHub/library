@@ -16,33 +16,13 @@ by    d8b   db d88888b d8888b. db    db db       .d8b.       .d8888.  .d88b.  d8
       VP   V8P Y88888P Y8888P' ~Y8888P' Y88888P YP   YP      `8888Y'  `Y88P'  YP         YP     `8b8' `8d8'   `Y88P'  88   YD YP   YD `8888Y' 
 
 
-Main Credits
+ReBuild
 
-Hunter (Nebula Softworks) | Designing And Programming | Main Developer
-JustHey (Nebula Softworks) | Configurations, Bug Fixing And More! | Co Developer
-Throit | Color Picker
-Wally | Dragging And Certain Functions
-Sirius | PCall Parsing, Notifications, Slider And Home Tab
-Luna Executor | Original UI
+Added CreateImage
+Added Mobile Check for Interface
+credits to https://docs.nebulasoftworks.xyz/luna
 
-
-Extra Credits / Provided Certain Elements
-
-Pookie Pepelss | Bug Tester
-Inori | Configuration Concept
-Latte Softworks and qweery | Lucide Icons And Material Icons
-kirill9655 | Loading Circle
-Deity/dp4pv/x64x70 | Certain Scripting and Testing ig
-
-Contributors
-iPigTw | Typo Fixer, Fixed Key System!!
-pushByAccident | Fixing Executor Lists
-ImFloriz | Method Fixing
-
-Luna Interface Suite
-by Nebula Softworks
-
-]]
+--]]
 
 local Release = "Prerelease Beta 6.1"
 
@@ -69,7 +49,6 @@ if RunService:IsStudio() then
 	isStudio = true
 end
 
--- Credits To Latte Softworks And qweery for Lucide And Material Icons Respectively.
 local IconModule = {
 	Lucide = nil,
 	Material = {
@@ -1581,9 +1560,8 @@ local function GetIcon(icon, source)
 	if source == "Custom" then
 		return "rbxassetid://" .. icon
 	elseif source == "Lucide" then
-		-- full credit to latte softworks :)
 		if isStudio then
-			return "rbxassetid://10723434557" -- Studio icon
+			return "rbxassetid://10723434557"
 		end
 		
 		local success, result = pcall(function()
@@ -1596,7 +1574,7 @@ local function GetIcon(icon, source)
 			local r = sizedicons[icon]
 			if not r then
 				warn("Lucide Icons: Failed to find icon by the name of \"" .. icon .. "\"")
-				return "rbxassetid://10723434557" -- Default icon
+				return "rbxassetid://10723434557"
 			end
 
 			local rirs = r[2]
@@ -1604,7 +1582,7 @@ local function GetIcon(icon, source)
 
 			if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
 				warn("Lucide Icons: Internal error: Invalid auto-generated asset entry")
-				return "rbxassetid://10723434557" -- Default icon
+				return "rbxassetid://10723434557"
 			end
 
 			local irs = Vector2.new(rirs[1], rirs[2])
@@ -1621,14 +1599,14 @@ local function GetIcon(icon, source)
 			return result
 		else
 			warn("Lucide Icons Error: " .. tostring(result))
-			return "rbxassetid://10723434557" -- Default icon on error
+			return "rbxassetid://10723434557"
 		end
 	else	
 		if icon ~= nil and IconModule[source] then
 			local sourceicon = IconModule[source]
-			return sourceicon[icon] or "rbxassetid://10723434557" -- Default icon if not found
+			return sourceicon[icon] or "rbxassetid://10723434557"
 		else
-			return "rbxassetid://10723434557" -- Default icon
+			return "rbxassetid://10723434557"
 		end
 	end
 end
@@ -1689,7 +1667,7 @@ local function BlurModule(Frame)
 	frame.AnchorPoint = Vector2.new(0.5, 0.5)
 	frame.BackgroundTransparency = 1
 
-	local GenUid; do -- Generate unique names for RenderStepped bindings
+	local GenUid; do
 		local id = 0
 		function GenUid()
 			id = id + 1
@@ -1879,13 +1857,13 @@ local SizeBleh = nil
 
 local function Hide(Window, bind, notif)
 	SizeBleh = Window.Size
-	bind = string.split(tostring(bind), "Enum.KeyCode.")
-	bind = bind[2]
-if not isfile("lunalibrary_hideinterface.json") then
-	if notif then
-		Luna:Notification({Title = "Interface Hidden", Content = "The interface has been hidden, you may reopen the interface by Pressing the UI Bind In Settings ("..tostring(bind)..")", Icon = "visibility_off"})
+	bind = string.split(tostring(bind), "Enum.KeyCode.")[2]
+	if game:GetService("UserInputService").TouchEnabled then return end
+	if not isfile("lunalibrary_hideinterface.json") then
+		if notif then
+			Luna:Notification({Title = "Interface Hidden", Content = "The interface has been hidden, you may reopen the interface by Pressing the UI Bind In Settings ("..tostring(bind)..")", Icon = "visibility_off"})
+		end
 	end
-end
 	tween(Window, {BackgroundTransparency = 1})
 	tween(Window.Elements, {BackgroundTransparency = 1})
 	tween(Window.Line, {BackgroundTransparency = 1})
@@ -4625,6 +4603,83 @@ function Luna:CreateWindow(WindowSettings)
 
 			return ParagraphV
 		end
+
+		-- Image
+function Tab:CreateImage(ImageSettings)
+
+    ImageSettings = Kwargify({
+        Title = "",
+        Image = "",
+        Size = UDim2.new(1, -24, 0, 150),
+        ScaleType = Enum.ScaleType.Fit,
+        CornerRadius = UDim.new(0, 8)
+    }, ImageSettings or {})
+
+    local ImageV = {
+        Settings = ImageSettings
+    }
+
+    local ImageEl = Elements.Template.Paragraph:Clone()
+    ImageEl.Name = "Image"
+    ImageEl.Title.Text = ImageSettings.Title
+    ImageEl.Title.Visible = ImageSettings.Title ~= ""
+
+    local Img = Instance.new("ImageLabel")
+    Img.Name = "Image"
+    Img.Image = ImageSettings.Image
+    Img.Size = ImageSettings.Size
+    Img.ScaleType = ImageSettings.ScaleType
+    Img.BackgroundTransparency = 1
+    Img.ImageTransparency = 1
+    Img.AnchorPoint = Vector2.new(0.5, 0)
+    Img.Position = UDim2.new(0.5, 0, 0, if ImageSettings.Title ~= "" then 28 else 8)
+    Instance.new("UICorner", Img).CornerRadius = ImageSettings.CornerRadius
+    Img.Parent = ImageEl
+
+    local titleOffset = if ImageSettings.Title ~= "" then 36 else 0
+    local imgHeight = ImageSettings.Size.Y.Offset
+    ImageEl.Size = UDim2.new(1, 0, 0, imgHeight + titleOffset + 16)
+
+    ImageEl.Visible = true
+    ImageEl.Parent = TabPage
+    ImageEl.BackgroundTransparency = 1
+    ImageEl.UIStroke.Transparency = 1
+    ImageEl.Title.TextTransparency = 1
+
+    TweenService:Create(ImageEl, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(ImageEl.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+    TweenService:Create(ImageEl.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+    TweenService:Create(Img, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+
+    function ImageV:Set(NewSettings)
+        NewSettings = Kwargify({
+            Title = ImageSettings.Title,
+            Image = ImageSettings.Image,
+            Size = ImageSettings.Size,
+            ScaleType = ImageSettings.ScaleType,
+            CornerRadius = ImageSettings.CornerRadius
+        }, NewSettings or {})
+
+        ImageV.Settings = NewSettings
+        ImageEl.Title.Text = NewSettings.Title
+        ImageEl.Title.Visible = NewSettings.Title ~= ""
+        Img.Image = NewSettings.Image
+        Img.Size = NewSettings.Size
+        Img.ScaleType = NewSettings.ScaleType
+        Img.UICorner.CornerRadius = NewSettings.CornerRadius
+
+        local tOffset = if NewSettings.Title ~= "" then 36 else 0
+        Img.Position = UDim2.new(0.5, 0, 0, if NewSettings.Title ~= "" then 28 else 8)
+        tween(ImageEl, {Size = UDim2.new(1, 0, 0, NewSettings.Size.Y.Offset + tOffset + 16)})
+    end
+
+    function ImageV:Destroy()
+        ImageEl.Visible = false
+        ImageEl:Destroy()
+    end
+
+    return ImageV
+end
 
 		-- Slider
 		function Tab:CreateSlider(SliderSettings, Flag)
