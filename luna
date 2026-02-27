@@ -4615,40 +4615,57 @@ function Tab:CreateImage(ImageSettings)
         CornerRadius = UDim.new(0, 8)
     }, ImageSettings or {})
 
-    local ImageV = {
-        Settings = ImageSettings
-    }
+    local ImageV = { Settings = ImageSettings }
 
-    local ImageEl = Elements.Template.Paragraph:Clone()
-    ImageEl.Name = "Image"
-    ImageEl.Title.Text = ImageSettings.Title
-    ImageEl.Title.Visible = ImageSettings.Title ~= ""
+    local Container = Instance.new("Frame")
+    Container.Name = "ImageElement"
+    Container.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Container.BackgroundTransparency = 1
+    Container.BorderSizePixel = 0
 
-    local Img = Instance.new("ImageLabel")
+    local Stroke = Instance.new("UIStroke", Container)
+    Stroke.Transparency = 1
+    Stroke.Color = Color3.fromRGB(60, 60, 60)
+
+    local Corner = Instance.new("UICorner", Container)
+    Corner.CornerRadius = UDim.new(0, 8)
+
+    local titleOffset = 0
+
+    if ImageSettings.Title ~= "" then
+        local Title = Instance.new("TextLabel", Container)
+        Title.Name = "Title"
+        Title.Text = ImageSettings.Title
+        Title.Font = Enum.Font.GothamBold
+        Title.TextSize = 14
+        Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Title.TextTransparency = 1
+        Title.BackgroundTransparency = 1
+        Title.TextXAlignment = Enum.TextXAlignment.Left
+        Title.Size = UDim2.new(1, -16, 0, 28)
+        Title.Position = UDim2.new(0, 12, 0, 6)
+        TweenService:Create(Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+        titleOffset = 36
+    end
+
+    local Img = Instance.new("ImageLabel", Container)
     Img.Name = "Image"
     Img.Image = ImageSettings.Image
-    Img.Size = ImageSettings.Size
+    Img.Size = UDim2.new(1, -16, 0, ImageSettings.Size.Y.Offset)
     Img.ScaleType = ImageSettings.ScaleType
     Img.BackgroundTransparency = 1
     Img.ImageTransparency = 1
     Img.AnchorPoint = Vector2.new(0.5, 0)
-    Img.Position = UDim2.new(0.5, 0, 0, if ImageSettings.Title ~= "" then 28 else 8)
-    Instance.new("UICorner", Img).CornerRadius = ImageSettings.CornerRadius
-    Img.Parent = ImageEl
+    Img.Position = UDim2.new(0.5, 0, 0, titleOffset + 8)
 
-    local titleOffset = if ImageSettings.Title ~= "" then 36 else 0
-    local imgHeight = ImageSettings.Size.Y.Offset
-    ImageEl.Size = UDim2.new(1, 0, 0, imgHeight + titleOffset + 16)
+    local ImgCorner = Instance.new("UICorner", Img)
+    ImgCorner.CornerRadius = ImageSettings.CornerRadius
 
-    ImageEl.Visible = true
-    ImageEl.Parent = TabPage
-    ImageEl.BackgroundTransparency = 1
-    ImageEl.UIStroke.Transparency = 1
-    ImageEl.Title.TextTransparency = 1
+    Container.Size = UDim2.new(1, 0, 0, ImageSettings.Size.Y.Offset + titleOffset + 16)
+    Container.Parent = TabPage
 
-    TweenService:Create(ImageEl, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-    TweenService:Create(ImageEl.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-    TweenService:Create(ImageEl.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+    TweenService:Create(Container, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
+    TweenService:Create(Stroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
     TweenService:Create(Img, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
 
     function ImageV:Set(NewSettings)
@@ -4659,23 +4676,18 @@ function Tab:CreateImage(ImageSettings)
             ScaleType = ImageSettings.ScaleType,
             CornerRadius = ImageSettings.CornerRadius
         }, NewSettings or {})
-
         ImageV.Settings = NewSettings
-        ImageEl.Title.Text = NewSettings.Title
-        ImageEl.Title.Visible = NewSettings.Title ~= ""
         Img.Image = NewSettings.Image
-        Img.Size = NewSettings.Size
+        Img.Size = UDim2.new(1, -16, 0, NewSettings.Size.Y.Offset)
         Img.ScaleType = NewSettings.ScaleType
-        Img.UICorner.CornerRadius = NewSettings.CornerRadius
-
-        local tOffset = if NewSettings.Title ~= "" then 36 else 0
-        Img.Position = UDim2.new(0.5, 0, 0, if NewSettings.Title ~= "" then 28 else 8)
-        tween(ImageEl, {Size = UDim2.new(1, 0, 0, NewSettings.Size.Y.Offset + tOffset + 16)})
+        ImgCorner.CornerRadius = NewSettings.CornerRadius
+        local tOff = if NewSettings.Title ~= "" then 36 else 0
+        tween(Container, {Size = UDim2.new(1, 0, 0, NewSettings.Size.Y.Offset + tOff + 16)})
     end
 
     function ImageV:Destroy()
-        ImageEl.Visible = false
-        ImageEl:Destroy()
+        Container.Visible = false
+        Container:Destroy()
     end
 
     return ImageV
