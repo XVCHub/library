@@ -3070,7 +3070,7 @@ function Tab:CreateImage(ImageSettings)
 
     if ImageSettings.Expandable then
         local ViewBtn = Instance.new("ImageButton", Container)
-        ViewBtn.Image = "rbxassetid://6031075929"
+        ViewBtn.Image = "rbxassetid://6026568245"
         ViewBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
         ViewBtn.BackgroundTransparency = 0.4
         ViewBtn.Size = UDim2.new(0, 32, 0, 32)
@@ -3110,7 +3110,7 @@ function Tab:CreateImage(ImageSettings)
         Instance.new("UICorner", FullImg).CornerRadius = UDim.new(0, 12)
 
         local CloseBtn = Instance.new("ImageButton", Bg)
-        CloseBtn.Image = "rbxassetid://6035047418"
+        CloseBtn.Image = "rbxassetid://6023426928"
         CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         CloseBtn.Size = UDim2.new(0, 36, 0, 36)
         CloseBtn.AnchorPoint = Vector2.new(1, 0)
