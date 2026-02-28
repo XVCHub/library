@@ -3014,14 +3014,13 @@ function RayfieldLibrary:CreateWindow(Settings)
 		end
 -- Image
 function Tab:CreateImage(ImageSettings)
-    ImageSettings = Kwargify and Kwargify({
-        Title = "",
-        Image = "",
-        Size = UDim2.new(1, -10, 0, 150),
-        ScaleType = Enum.ScaleType.Fit,
-        CornerRadius = UDim.new(0, 8),
-        Expandable = false
-    }, ImageSettings or {}) or ImageSettings
+    ImageSettings = ImageSettings or {}
+    ImageSettings.Title = ImageSettings.Title or ""
+    ImageSettings.Image = ImageSettings.Image or ""
+    ImageSettings.Size = ImageSettings.Size or UDim2.new(1, -10, 0, 150)
+    ImageSettings.ScaleType = ImageSettings.ScaleType or Enum.ScaleType.Fit
+    ImageSettings.CornerRadius = ImageSettings.CornerRadius or UDim.new(0, 8)
+    ImageSettings.Expandable = ImageSettings.Expandable or false
 
     local ImageV = { Settings = ImageSettings }
 
@@ -3040,7 +3039,7 @@ function Tab:CreateImage(ImageSettings)
 
     local titleOffset = 0
 
-    if ImageSettings.Title ~= "" then
+    if ImageSettings.Title and ImageSettings.Title ~= "" then
         local Title = Instance.new("TextLabel", Container)
         Title.Name = "Title"
         Title.Text = ImageSettings.Title
