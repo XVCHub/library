@@ -1858,11 +1858,12 @@ local SizeBleh = nil
 local function Hide(Window, bind, notif)
 	SizeBleh = Window.Size
 	bind = string.split(tostring(bind), "Enum.KeyCode.")[2]
-	if game:GetService("UserInputService").TouchEnabled then return end
+	if game:GetService("UserInputService").TouchEnabled then
 	if not isfile("lunalibrary_hideinterface.json") then
 		if notif then
 			Luna:Notification({Title = "Interface Hidden", Content = "The interface has been hidden, you may reopen the interface by Pressing the UI Bind In Settings ("..tostring(bind)..")", Icon = "visibility_off"})
 		end
+	end
 	end
 	tween(Window, {BackgroundTransparency = 1})
 	tween(Window.Elements, {BackgroundTransparency = 1})
@@ -4649,15 +4650,16 @@ function Tab:CreateImage(ImageSettings)
     end
 
 	if ImageSettings.Expandable then
-local ViewBtn = Instance.new("ImageButton", Container)
-ViewBtn.Image = "rbxassetid://6026568245"
-ViewBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-ViewBtn.BackgroundTransparency = 0.4
-ViewBtn.Size = UDim2.new(0, 32, 0, 32)
-ViewBtn.AnchorPoint = Vector2.new(1, 1)
-ViewBtn.Position = UDim2.new(1, -8, 1, -8)
-ViewBtn.ZIndex = 10
-Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 6)
+
+        local ViewBtn = Instance.new("ImageButton", Container)
+        ViewBtn.Image = "rbxassetid://6026568245"
+        ViewBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        ViewBtn.BackgroundTransparency = 0.4
+        ViewBtn.Size = UDim2.new(0, 32, 0, 32)
+        ViewBtn.AnchorPoint = Vector2.new(1, 1)
+        ViewBtn.Position = UDim2.new(1, -8, 1, -8)
+        ViewBtn.ZIndex = 10
+        Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 6)
 
         local Overlay = Instance.new("ScreenGui", gethui())
         Overlay.Name = "ImageViewer"
@@ -4678,14 +4680,14 @@ Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 6)
         FullImg.ScaleType = Enum.ScaleType.Fit
         Instance.new("UICorner", FullImg).CornerRadius = UDim.new(0, 12)
 
-local CloseBtn = Instance.new("ImageButton", Bg)
-CloseBtn.Image = "rbxassetid://6023426928"
-CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-CloseBtn.Size = UDim2.new(0, 36, 0, 36)
-CloseBtn.AnchorPoint = Vector2.new(1, 0)
-CloseBtn.Position = UDim2.new(0.95, 0, 0.05, 0)
-CloseBtn.ZIndex = 10
-Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(1, 0)
+        local CloseBtn = Instance.new("ImageButton", Bg)
+        CloseBtn.Image = "rbxassetid://6023426928"
+        CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        CloseBtn.Size = UDim2.new(0, 36, 0, 36)
+        CloseBtn.AnchorPoint = Vector2.new(1, 0)
+        CloseBtn.Position = UDim2.new(0.95, 0, 0.05, 0)
+        CloseBtn.ZIndex = 10
+        Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(1, 0)
 
         ViewBtn.MouseButton1Click:Connect(function()
             Overlay.Enabled = true
