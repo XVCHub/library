@@ -4665,7 +4665,7 @@ function Tab:CreateImage(ImageSettings)
         Overlay.Name = "ImageViewer"
         Overlay.Enabled = false
 
-        local Bg = Instance.new("Frame", Overlay)
+        local Bg = Instance.new("ImageButton", Overlay)
         Bg.Size = UDim2.new(1, 0, 1, 0)
         Bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         Bg.BackgroundTransparency = 0.3
