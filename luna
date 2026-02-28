@@ -4648,6 +4648,62 @@ function Tab:CreateImage(ImageSettings)
         titleOffset = 36
     end
 
+	if ImageSettings.Expandable then
+        local ViewBtn = Instance.new("TextButton", Container)
+        ViewBtn.Text = "⛶"
+        ViewBtn.Font = Enum.Font.GothamBold
+        ViewBtn.TextSize = 16
+        ViewBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        ViewBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        ViewBtn.BackgroundTransparency = 0.4
+        ViewBtn.Size = UDim2.new(0, 32, 0, 32)
+        ViewBtn.AnchorPoint = Vector2.new(1, 0)
+        ViewBtn.Position = UDim2.new(1, -8, 0, titleOffset + 16)
+        Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 6)
+
+        local Overlay = Instance.new("ScreenGui", gethui())
+        Overlay.Name = "ImageViewer"
+        Overlay.Enabled = false
+
+        local Bg = Instance.new("Frame", Overlay)
+        Bg.Size = UDim2.new(1, 0, 1, 0)
+        Bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        Bg.BackgroundTransparency = 0.3
+        Bg.BorderSizePixel = 0
+
+        local FullImg = Instance.new("ImageLabel", Bg)
+        FullImg.Image = ImageSettings.Image
+        FullImg.Size = UDim2.new(0.9, 0, 0.9, 0)
+        FullImg.AnchorPoint = Vector2.new(0.5, 0.5)
+        FullImg.Position = UDim2.new(0.5, 0, 0.5, 0)
+        FullImg.BackgroundTransparency = 1
+        FullImg.ScaleType = Enum.ScaleType.Fit
+        Instance.new("UICorner", FullImg).CornerRadius = UDim.new(0, 12)
+
+        local CloseBtn = Instance.new("TextButton", Bg)
+        CloseBtn.Text = "✕"
+        CloseBtn.Font = Enum.Font.GothamBold
+        CloseBtn.TextSize = 18
+        CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        CloseBtn.Size = UDim2.new(0, 36, 0, 36)
+        CloseBtn.AnchorPoint = Vector2.new(1, 0)
+        CloseBtn.Position = UDim2.new(0.95, 0, 0.05, 0)
+        Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(1, 0)
+
+        ViewBtn.MouseButton1Click:Connect(function()
+            Overlay.Enabled = true
+        end)
+
+        Bg.MouseButton1Click:Connect(function()
+            Overlay.Enabled = false
+        end)
+
+        CloseBtn.MouseButton1Click:Connect(function()
+            Overlay.Enabled = false
+        end)
+    end
+
     local Img = Instance.new("ImageLabel", Container)
     Img.Name = "Image"
     Img.Image = ImageSettings.Image
