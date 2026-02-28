@@ -3012,7 +3012,163 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			return ParagraphValue
 		end
+-- Image
+function Tab:CreateImage(ImageSettings)
+    ImageSettings = Kwargify and Kwargify({
+        Title = "",
+        Image = "",
+        Size = UDim2.new(1, -10, 0, 150),
+        ScaleType = Enum.ScaleType.Fit,
+        CornerRadius = UDim.new(0, 8),
+        Expandable = false
+    }, ImageSettings or {}) or ImageSettings
 
+    local ImageV = { Settings = ImageSettings }
+
+    local Container = Instance.new("Frame")
+    Container.Name = "ImageElement"
+    Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
+    Container.BackgroundTransparency = 1
+    Container.BorderSizePixel = 0
+    Container.Parent = TabPage
+
+    local Stroke = Instance.new("UIStroke", Container)
+    Stroke.Color = SelectedTheme.SecondaryElementStroke
+    Stroke.Transparency = 1
+
+    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
+
+    local titleOffset = 0
+
+    if ImageSettings.Title ~= "" then
+        local Title = Instance.new("TextLabel", Container)
+        Title.Name = "Title"
+        Title.Text = ImageSettings.Title
+        Title.Font = Enum.Font.GothamBold
+        Title.TextSize = 14
+        Title.TextColor3 = SelectedTheme.TextColor
+        Title.TextTransparency = 1
+        Title.BackgroundTransparency = 1
+        Title.TextXAlignment = Enum.TextXAlignment.Left
+        Title.Size = UDim2.new(1, -16, 0, 28)
+        Title.Position = UDim2.new(0, 12, 0, 6)
+        TweenService:Create(Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+        titleOffset = 34
+    end
+
+    local Img = Instance.new("ImageLabel", Container)
+    Img.Name = "Image"
+    Img.Image = ImageSettings.Image
+    Img.Size = UDim2.new(1, -16, 0, ImageSettings.Size.Y.Offset)
+    Img.ScaleType = ImageSettings.ScaleType
+    Img.BackgroundTransparency = 1
+    Img.ImageTransparency = 1
+    Img.AnchorPoint = Vector2.new(0.5, 0)
+    Img.Position = UDim2.new(0.5, 0, 0, titleOffset + 8)
+    Instance.new("UICorner", Img).CornerRadius = ImageSettings.CornerRadius
+
+    Container.Size = UDim2.new(1, -10, 0, ImageSettings.Size.Y.Offset + titleOffset + 16)
+
+    if ImageSettings.Expandable then
+        local ViewBtn = Instance.new("ImageButton", Container)
+        ViewBtn.Image = "rbxassetid://6031075929"
+        ViewBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        ViewBtn.BackgroundTransparency = 0.4
+        ViewBtn.Size = UDim2.new(0, 32, 0, 32)
+        ViewBtn.AnchorPoint = Vector2.new(1, 1)
+        ViewBtn.Position = UDim2.new(1, -8, 1, -8)
+        ViewBtn.ZIndex = 10
+        Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 6)
+
+        local Overlay = Instance.new("ScreenGui")
+        Overlay.Name = "ImageViewer"
+        Overlay.Enabled = false
+        Overlay.DisplayOrder = 200
+
+        if gethui then
+            Overlay.Parent = gethui()
+        elseif syn and syn.protect_gui then
+            syn.protect_gui(Overlay)
+            Overlay.Parent = CoreGui
+        else
+            Overlay.Parent = CoreGui
+        end
+
+        local Bg = Instance.new("ImageButton", Overlay)
+        Bg.Size = UDim2.new(1, 0, 1, 0)
+        Bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        Bg.BackgroundTransparency = 0.3
+        Bg.BorderSizePixel = 0
+        Bg.Image = ""
+
+        local FullImg = Instance.new("ImageLabel", Bg)
+        FullImg.Image = ImageSettings.Image
+        FullImg.Size = UDim2.new(0.9, 0, 0.9, 0)
+        FullImg.AnchorPoint = Vector2.new(0.5, 0.5)
+        FullImg.Position = UDim2.new(0.5, 0, 0.5, 0)
+        FullImg.BackgroundTransparency = 1
+        FullImg.ScaleType = Enum.ScaleType.Fit
+        Instance.new("UICorner", FullImg).CornerRadius = UDim.new(0, 12)
+
+        local CloseBtn = Instance.new("ImageButton", Bg)
+        CloseBtn.Image = "rbxassetid://6035047418"
+        CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        CloseBtn.Size = UDim2.new(0, 36, 0, 36)
+        CloseBtn.AnchorPoint = Vector2.new(1, 0)
+        CloseBtn.Position = UDim2.new(0.95, 0, 0.05, 0)
+        CloseBtn.ZIndex = 10
+        Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(1, 0)
+
+        ViewBtn.MouseButton1Click:Connect(function()
+            Overlay.Enabled = true
+        end)
+
+        Bg.MouseButton1Click:Connect(function()
+            Overlay.Enabled = false
+        end)
+
+        CloseBtn.MouseButton1Click:Connect(function()
+            Overlay.Enabled = false
+        end)
+
+        Container.Destroying:Connect(function()
+            Overlay:Destroy()
+        end)
+    end
+
+    TweenService:Create(Container, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(Stroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+    TweenService:Create(Img, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+
+    Rayfield.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
+        Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
+        Stroke.Color = SelectedTheme.SecondaryElementStroke
+        if Container:FindFirstChild('Title') then
+            Container.Title.TextColor3 = SelectedTheme.TextColor
+        end
+    end)
+
+    function ImageV:Set(NewSettings)
+        NewSettings = NewSettings or {}
+        Img.Image = NewSettings.Image or ImageSettings.Image
+        Img.ScaleType = NewSettings.ScaleType or ImageSettings.ScaleType
+        if NewSettings.Size then
+            Img.Size = UDim2.new(1, -16, 0, NewSettings.Size.Y.Offset)
+            Container.Size = UDim2.new(1, -10, 0, NewSettings.Size.Y.Offset + titleOffset + 16)
+        end
+        if Container:FindFirstChild('Title') and NewSettings.Title then
+            Container.Title.Text = NewSettings.Title
+        end
+        ImageV.Settings = NewSettings
+    end
+
+    function ImageV:Destroy()
+        Container.Visible = false
+        Container:Destroy()
+    end
+
+    return ImageV
+end
 		-- Input
 		function Tab:CreateInput(InputSettings)
 			local Input = Elements.Template.Input:Clone()
