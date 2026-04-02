@@ -4730,21 +4730,22 @@ function Tab:CreateImage(ImageSettings)
 
     return ImageV
 end
+
 --search
 function Tab:CreateSearchBar(SearchSettings)
     SearchSettings = Kwargify({
         Name = "Search",
-        PlaceholderText = "Search...",
-        Callback = function(Text) end,
+        PlaceholderText = "Search elements...",
     }, SearchSettings or {})
 
-    local SearchV = { CurrentValue = "", Settings = SearchSettings }
+    local SearchV = { CurrentValue = "" }
 
     local Container = Elements.Template.Input:Clone()
-    Container.Name = SearchSettings.Name
+    Container.Name = "SearchBar"
     Container.Title.Text = SearchSettings.Name
     Container.Visible = true
     Container.Parent = TabPage
+    Container.LayoutOrder = 0
 
     Container.BackgroundTransparency = 1
     Container.UIStroke.Transparency = 1
@@ -4763,13 +4764,7 @@ function Tab:CreateSearchBar(SearchSettings)
     local Box = Container.InputFrame.InputBox
     Box.PlaceholderText = SearchSettings.PlaceholderText
     Box.ClearTextOnFocus = false
-
     Container.InputFrame.Size = UDim2.new(1, -16, 0, 30)
-
-    Box:GetPropertyChangedSignal("Text"):Connect(function()
-        SearchV.CurrentValue = Box.Text
-        pcall(SearchSettings.Callback, Box.Text)
-    end)
 
     Container["MouseEnter"]:Connect(function()
         tween(Container.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
@@ -4778,27 +4773,44 @@ function Tab:CreateSearchBar(SearchSettings)
         tween(Container.UIStroke, {Color = Color3.fromRGB(64, 61, 76)})
     end)
 
-    function SearchV:Set(NewSettings)
-        NewSettings = Kwargify(SearchSettings, NewSettings or {})
-        SearchSettings = NewSettings
-        SearchV.Settings = NewSettings
-        Container.Title.Text = NewSettings.Name
-        Box.PlaceholderText = NewSettings.PlaceholderText
-        Box.Text = NewSettings.CurrentValue or ""
+    Box:GetPropertyChangedSignal("Text"):Connect(function()
+        local query = Box.Text:lower()
         SearchV.CurrentValue = Box.Text
-    end
+
+        for _, element in TabPage:GetChildren() do
+            if element == Container then continue end
+            if not element:IsA("Frame") and not element:IsA("TextLabel") then continue end
+
+            local titleLabel = element:FindFirstChild("Title") or element:FindFirstChild("Text")
+            if not titleLabel then
+                element.Visible = true
+                continue
+            end
+
+            if query == "" then
+                element.Visible = true
+            else
+                element.Visible = titleLabel.Text:lower():find(query, 1, true) ~= nil
+            end
+        end
+    end)
 
     function SearchV:Clear()
         Box.Text = ""
-        SearchV.CurrentValue = ""
     end
 
     function SearchV:Destroy()
+        for _, element in TabPage:GetChildren() do
+            if element:IsA("Frame") or element:IsA("TextLabel") then
+                element.Visible = true
+            end
+        end
         Container:Destroy()
     end
 
     return SearchV
 end
+
 		-- Slider
 		function Tab:CreateSlider(SliderSettings, Flag)
 			local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
