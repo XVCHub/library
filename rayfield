@@ -76,7 +76,7 @@ end
 local _getgenv = rawget(_G, "getgenv")
 local requestsDisabled = false
 local customAssetId = "106440328503258"
-local secureMode = true
+local secureMode = false
 if _getgenv then
 	local ok, result = pcall(function() return _getgenv().DISABLE_RAYFIELD_REQUESTS end)
 	if ok and result then requestsDisabled = true end
