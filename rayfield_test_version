@@ -1,11 +1,8 @@
 --[[
 
-	Rayfield Interface Suite
-	by Sirius
+	Rebuild Rayfield Interface Suite
 
-	shlex | Designing + Programming
-	iRay  | Programming
-	Max   | Programming
+	https://docs.sirius.menu/rayfield
 
 ]]
 
@@ -3185,6 +3182,115 @@ function Tab:CreateImage(ImageSettings)
     end
 
     return ImageV
+end
+-- Search
+function Tab:CreateSearchBar(SearchSettings)
+    SearchSettings = SearchSettings or {}
+    SearchSettings.PlaceholderText = SearchSettings.PlaceholderText or "Search..."
+    SearchSettings.Size = SearchSettings.Size or UDim2.new(1, -10, 0, 36)
+
+    local SearchV = { Settings = SearchSettings, CurrentValue = "" }
+
+    local Container = Instance.new("Frame")
+    Container.Name = "SearchElement"
+    Container.Size = SearchSettings.Size
+    Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
+    Container.BackgroundTransparency = 1
+    Container.BorderSizePixel = 0
+    Container.Parent = TabPage
+
+    local Stroke = Instance.new("UIStroke", Container)
+    Stroke.Color = SelectedTheme.SecondaryElementStroke
+    Stroke.Transparency = 1
+
+    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
+
+    local Box = Instance.new("TextBox", Container)
+    Box.Name = "Input"
+    Box.Size = UDim2.new(1, -20, 1, 0)
+    Box.Position = UDim2.new(0, 10, 0, 0)
+    Box.BackgroundTransparency = 1
+    Box.Text = ""
+    Box.PlaceholderText = SearchSettings.PlaceholderText
+    Box.PlaceholderColor3 = SelectedTheme.PlaceholderColor or Color3.fromRGB(150,150,150)
+    Box.TextColor3 = SelectedTheme.TextColor
+    Box.TextSize = 14
+    Box.Font = Enum.Font.Gotham
+    Box.TextXAlignment = Enum.TextXAlignment.Left
+    Box.ClearTextOnFocus = false
+    Box.TextTransparency = 1
+
+    -- Hover Effect
+    Container.MouseEnter:Connect(function()
+        TweenService:Create(Stroke, TweenInfo.new(0.2), {
+            Color = SelectedTheme.ElementStrokeHover or SelectedTheme.SecondaryElementStroke,
+            Transparency = 0
+        }):Play()
+    end)
+
+    Container.MouseLeave:Connect(function()
+        TweenService:Create(Stroke, TweenInfo.new(0.2), {
+            Color = SelectedTheme.SecondaryElementStroke,
+            Transparency = 0
+        }):Play()
+    end)
+
+    -- Fade In
+    TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+        BackgroundTransparency = 0
+    }):Play()
+
+    TweenService:Create(Stroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+        Transparency = 0
+    }):Play()
+
+    TweenService:Create(Box, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+        TextTransparency = 0
+    }):Play()
+
+    -- Search Logic
+    Box:GetPropertyChangedSignal("Text"):Connect(function()
+        local query = Box.Text:lower()
+        SearchV.CurrentValue = Box.Text
+
+        for _, element in ipairs(TabPage:GetChildren()) do
+            if element == Container then continue end
+            if not element:IsA("Frame") then continue end
+
+            local titleLabel = element:FindFirstChild("Title")
+            if not titleLabel then
+                element.Visible = true
+                continue
+            end
+
+            element.Visible = (query == "") or (titleLabel.Text:lower():find(query, 1, true) ~= nil)
+        end
+    end)
+
+    Rayfield.Main:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
+        Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
+        Stroke.Color = SelectedTheme.SecondaryElementStroke
+        Box.TextColor3 = SelectedTheme.TextColor
+    end)
+
+    function SearchV:Set(Value)
+        Box.Text = tostring(Value)
+    end
+
+    function SearchV:Clear()
+        Box.Text = ""
+    end
+
+    function SearchV:Destroy()
+        for _, element in ipairs(TabPage:GetChildren()) do
+            if element:IsA("Frame") then
+                element.Visible = true
+            end
+        end
+        Container:Destroy()
+    end
+
+    return SearchV
 end
 		-- Input
 		function Tab:CreateInput(InputSettings)
