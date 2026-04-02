@@ -4734,44 +4734,56 @@ end
 --search
 function Tab:CreateSearchBar(SearchSettings)
     SearchSettings = Kwargify({
-        Name = "Search",
-        PlaceholderText = "Search elements...",
+        PlaceholderText = "Search...",
     }, SearchSettings or {})
 
     local SearchV = { CurrentValue = "" }
 
-    local Container = Elements.Template.Input:Clone()
+    local Container = Instance.new("Frame")
     Container.Name = "SearchBar"
-    Container.Title.Text = SearchSettings.Name
-    Container.Visible = true
-    Container.Parent = TabPage
+    Container.Size = UDim2.new(1, -25, 0, 36)
+    Container.BackgroundColor3 = Color3.fromRGB(28, 26, 34)
+    Container.BackgroundTransparency = 0.5
+    Container.BorderSizePixel = 0
     Container.LayoutOrder = 0
+    Container.Parent = TabPage
+
+    local Corner = Instance.new("UICorner", Container)
+    Corner.CornerRadius = UDim.new(0, 8)
+
+    local Stroke = Instance.new("UIStroke", Container)
+    Stroke.Color = Color3.fromRGB(64, 61, 76)
+    Stroke.Thickness = 1
+    Stroke.Transparency = 0.5
+
+    local Box = Instance.new("TextBox", Container)
+    Box.Name = "Input"
+    Box.Size = UDim2.new(1, -20, 1, 0)
+    Box.Position = UDim2.new(0, 10, 0, 0)
+    Box.BackgroundTransparency = 1
+    Box.Text = ""
+    Box.PlaceholderText = SearchSettings.PlaceholderText
+    Box.PlaceholderColor3 = Color3.fromRGB(120, 115, 140)
+    Box.TextColor3 = Color3.fromRGB(240, 240, 240)
+    Box.TextSize = 14
+    Box.Font = Enum.Font.Gotham
+    Box.TextXAlignment = Enum.TextXAlignment.Left
+    Box.ClearTextOnFocus = false
+
+    Container.MouseEnter:Connect(function()
+        tween(Stroke, {Color = Color3.fromRGB(87, 84, 104), Transparency = 0})
+    end)
+    Container.MouseLeave:Connect(function()
+        tween(Stroke, {Color = Color3.fromRGB(64, 61, 76), Transparency = 0.5})
+    end)
 
     Container.BackgroundTransparency = 1
-    Container.UIStroke.Transparency = 1
-    Container.Title.TextTransparency = 1
-    Container.InputFrame.BackgroundTransparency = 1
-    Container.InputFrame.UIStroke.Transparency = 1
-    Container.InputFrame.InputBox.TextTransparency = 1
+    Stroke.Transparency = 1
+    Box.TextTransparency = 1
 
     TweenService:Create(Container, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-    TweenService:Create(Container.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-    TweenService:Create(Container.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-    TweenService:Create(Container.InputFrame, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.9}):Play()
-    TweenService:Create(Container.InputFrame.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.3}):Play()
-    TweenService:Create(Container.InputFrame.InputBox, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-
-    local Box = Container.InputFrame.InputBox
-    Box.PlaceholderText = SearchSettings.PlaceholderText
-    Box.ClearTextOnFocus = false
-    Container.InputFrame.Size = UDim2.new(1, -16, 0, 30)
-
-    Container["MouseEnter"]:Connect(function()
-        tween(Container.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
-    end)
-    Container["MouseLeave"]:Connect(function()
-        tween(Container.UIStroke, {Color = Color3.fromRGB(64, 61, 76)})
-    end)
+    TweenService:Create(Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+    TweenService:Create(Box, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
     Box:GetPropertyChangedSignal("Text"):Connect(function()
         local query = Box.Text:lower()
@@ -4787,11 +4799,7 @@ function Tab:CreateSearchBar(SearchSettings)
                 continue
             end
 
-            if query == "" then
-                element.Visible = true
-            else
-                element.Visible = titleLabel.Text:lower():find(query, 1, true) ~= nil
-            end
+            element.Visible = query == "" or titleLabel.Text:lower():find(query, 1, true) ~= nil
         end
     end)
 
