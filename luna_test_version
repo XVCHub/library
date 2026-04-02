@@ -1882,36 +1882,57 @@ end
 	Window.Visible = false
 end
 
+local COREGUI = cloneref(game:GetService("CoreGui"))
+local LPLR = cloneref(game:GetService("Players")).LocalPlayer
+local RPLR = cloneref(game:GetService("Players")):FindFirstChildWhichIsA("Player")
+local STUDIO = cloneref(game:GetService("RunService")):IsStudio()
+local HUI = get_hidden_gui or gethui
 
-if gethui then
-	LunaUI.Parent = gethui()
-elseif syn and syn.protect_gui then 
-	syn.protect_gui(LunaUI)
-	LunaUI.Parent = CoreGui
-elseif not isStudio and CoreGui:FindFirstChild("RobloxGui") then
-	LunaUI.Parent = CoreGui:FindFirstChild("RobloxGui")
-elseif not isStudio then
-	LunaUI.Parent = CoreGui
+local function PROTECT_UI(G)
+    G.Name = "\0"
+    G.Archivable = false
+
+    if HUI then
+        G.Parent = HUI()
+        for _, O in HUI():GetChildren() do
+            if O.Name == "\0" and O ~= G then O:Destroy() end
+        end
+    elseif not is_sirhurt_closure and syn and syn.protect_gui then
+        syn.protect_gui(G)
+        G.Parent = COREGUI
+        for _, O in COREGUI:GetChildren() do
+            if O.Name == "\0" and O ~= G then O:Destroy() end
+        end
+    elseif COREGUI:FindFirstChildWhichIsA("ScreenGui") then
+        local MAP = {}
+        pcall(function()
+            for _, v in G:GetDescendants() do MAP[v] = RPLR.Name end
+            G.DescendantAdded:Connect(function(v) MAP[v] = RPLR.Name end)
+            MAP[G] = RPLR.Name
+            local META = getrawmetatable(game)
+            local OLD = META.__tostring
+            setreadonly(META, false)
+            META.__tostring = newcclosure(function(t)
+                return if MAP[t] and not checkcaller() then MAP[t] else OLD(t)
+            end)
+        end)
+        if not STUDIO then
+            local T = COREGUI:FindFirstChildWhichIsA("ScreenGui")
+            T.DescendantAdded:Connect(function(v) MAP[v] = RPLR.Name end)
+            for _, v in G:GetChildren() do v.Parent = T end
+            G = T
+        end
+    elseif COREGUI then
+        G.Parent = COREGUI
+    elseif LPLR then
+        G.Parent = LPLR.PlayerGui
+    else
+        return nil
+    end
+
+    return G
 end
-
-if gethui then
-	for _, Interface in ipairs(gethui():GetChildren()) do
-		if Interface.Name == LunaUI.Name and Interface ~= LunaUI then
-			Hide(Interface.SmartWindow)
-			Interface.Enabled = false
-			Interface.Name = "Luna-Old"
-		end
-	end
-elseif not isStudio then
-	for _, Interface in ipairs(CoreGui:GetChildren()) do
-		if Interface.Name == LunaUI.Name and Interface ~= LunaUI then
-			Hide(Interface.SmartWindow)
-			Interface.Enabled = false
-			Interface.Name = "Luna-Old"
-		end
-	end
-end
-
+PROTECT_UI(LunaUI)
 LunaUI.Enabled = false
 LunaUI.SmartWindow.Visible = false
 LunaUI.Notifications.Template.Visible = false
