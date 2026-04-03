@@ -1,11 +1,14 @@
 --[[
 
-	Rebuild Rayfield Interface Suite
+	Rayfield Interface Suite
+	by Sirius
 
-	https://docs.sirius.menu/rayfield
+	shlex  | Designing + Programming
+	iRay   | Programming
+	Max    | Programming
+	Damian | Programming
 
 ]]
-
 
 if debugX then
 	warn('Initialising Rayfield')
@@ -1419,25 +1422,13 @@ local function Hide(notify: boolean?)
 	task.spawn(closeSearch)
 
 	Debounce = true
-if not isfile("rayfieldlibrary_hideinterface.json") then
-    if notify then
-        if useMobilePrompt then 
-            RayfieldLibrary:Notify({
-                Title = "Interface Hidden",
-                Content = "The interface has been hidden, you can unhide the interface by tapping 'Show Rayfield'.",
-                Duration = 7,
-                Image = 4400697855
-            })
-        else
-            RayfieldLibrary:Notify({
-                Title = "Interface Hidden",
-                Content = `The interface has been hidden, you can unhide the interface by tapping {getSetting("General", "rayfieldOpen")}.`,
-                Duration = 7,
-                Image = 4400697855
-            })
-        end
-    end
-end
+	if notify then
+		if useMobilePrompt then 
+			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.", Duration = 7, Image = 4400697855})
+		else
+			RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping " .. tostring(getSetting("General", "rayfieldOpen")) .. ".", Duration = 7, Image = 4400697855})
+		end
+	end
 
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 470, 0, 0)}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 470, 0, 45)}):Play()
@@ -1699,8 +1690,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 	if getgenv then getgenv().rayfieldCached = true end
 
-    local loadingEnabled = Settings.LoadingEnabled ~= false
-
 	if not correctBuild and not Settings.DisableBuildWarnings then
 		task.delay(3, 
 			function() 
@@ -1793,8 +1782,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 				task.wait(math.random(180, 600))
 				if rayfieldDestroyed then break end
 				RayfieldLibrary:Notify({
-					Title = "XVC Hub",
-					Content = "Enjoying this Script Hub? Find it at discord.gg/rTw5M8dRXN",
+					Title = "Rayfield Interface",
+					Content = "Enjoying this UI library? Find it at sirius.menu/discord",
 					Duration = 7,
 					Image = 4370033185,
 				})
@@ -2650,271 +2639,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			return ParagraphValue
 		end
--- Image
-function Tab:CreateImage(ImageSettings)
-    ImageSettings = ImageSettings or {}
-    ImageSettings.Title = ImageSettings.Title or ""
-    ImageSettings.Image = ImageSettings.Image or ""
-    ImageSettings.Size = ImageSettings.Size or UDim2.new(1, -10, 0, 150)
-    ImageSettings.ScaleType = ImageSettings.ScaleType or Enum.ScaleType.Fit
-    ImageSettings.CornerRadius = ImageSettings.CornerRadius or UDim.new(0, 8)
-    ImageSettings.Expandable = ImageSettings.Expandable or false
 
-    local ImageV = { Settings = ImageSettings }
-
-    local Container = Instance.new("Frame")
-    Container.Name = "ImageElement"
-    Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
-    Container.BackgroundTransparency = 1
-    Container.BorderSizePixel = 0
-    Container.Parent = TabPage
-
-    local Stroke = Instance.new("UIStroke", Container)
-    Stroke.Color = SelectedTheme.SecondaryElementStroke
-    Stroke.Transparency = 1
-
-    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
-
-    local titleOffset = 0
-
-    if ImageSettings.Title and ImageSettings.Title ~= "" then
-        local Title = Instance.new("TextLabel", Container)
-        Title.Name = "Title"
-        Title.Text = ImageSettings.Title
-        Title.Font = Enum.Font.GothamBold
-        Title.TextSize = 14
-        Title.TextColor3 = SelectedTheme.TextColor
-        Title.TextTransparency = 1
-        Title.BackgroundTransparency = 1
-        Title.TextXAlignment = Enum.TextXAlignment.Left
-        Title.Size = UDim2.new(1, -16, 0, 28)
-        Title.Position = UDim2.new(0, 12, 0, 6)
-        TweenService:Create(Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-        titleOffset = 34
-    end
-
-    local Img = Instance.new("ImageLabel", Container)
-    Img.Name = "Image"
-    Img.Image = ImageSettings.Image
-    Img.Size = UDim2.new(1, -16, 0, ImageSettings.Size.Y.Offset)
-    Img.ScaleType = ImageSettings.ScaleType
-    Img.BackgroundTransparency = 1
-    Img.ImageTransparency = 1
-    Img.AnchorPoint = Vector2.new(0.5, 0)
-    Img.Position = UDim2.new(0.5, 0, 0, titleOffset + 8)
-    Instance.new("UICorner", Img).CornerRadius = ImageSettings.CornerRadius
-
-    Container.Size = UDim2.new(1, -10, 0, ImageSettings.Size.Y.Offset + titleOffset + 16)
-
-    if ImageSettings.Expandable then
-        local ViewBtn = Instance.new("ImageButton", Container)
-        ViewBtn.Image = "rbxassetid://6026568245"
-        ViewBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-        ViewBtn.BackgroundTransparency = 0.4
-        ViewBtn.Size = UDim2.new(0, 32, 0, 32)
-        ViewBtn.AnchorPoint = Vector2.new(1, 1)
-        ViewBtn.Position = UDim2.new(1, -8, 1, -8)
-        ViewBtn.ZIndex = 10
-        Instance.new("UICorner", ViewBtn).CornerRadius = UDim.new(0, 6)
-
-        local Overlay = Instance.new("ScreenGui")
-        Overlay.Name = "ImageViewer"
-        Overlay.Enabled = false
-        Overlay.DisplayOrder = 200
-
-        if gethui then
-            Overlay.Parent = gethui()
-        elseif syn and syn.protect_gui then
-            syn.protect_gui(Overlay)
-            Overlay.Parent = CoreGui
-        else
-            Overlay.Parent = CoreGui
-        end
-
-        local Bg = Instance.new("ImageButton", Overlay)
-        Bg.Size = UDim2.new(1, 0, 1, 0)
-        Bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        Bg.BackgroundTransparency = 0.3
-        Bg.BorderSizePixel = 0
-        Bg.Image = ""
-
-        local FullImg = Instance.new("ImageLabel", Bg)
-        FullImg.Image = ImageSettings.Image
-        FullImg.Size = UDim2.new(0.9, 0, 0.9, 0)
-        FullImg.AnchorPoint = Vector2.new(0.5, 0.5)
-        FullImg.Position = UDim2.new(0.5, 0, 0.5, 0)
-        FullImg.BackgroundTransparency = 1
-        FullImg.ScaleType = Enum.ScaleType.Fit
-        Instance.new("UICorner", FullImg).CornerRadius = UDim.new(0, 12)
-
-        local CloseBtn = Instance.new("ImageButton", Bg)
-        CloseBtn.Image = "rbxassetid://6023426928"
-        CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        CloseBtn.Size = UDim2.new(0, 36, 0, 36)
-        CloseBtn.AnchorPoint = Vector2.new(1, 0)
-        CloseBtn.Position = UDim2.new(0.95, 0, 0.05, 0)
-        CloseBtn.ZIndex = 10
-        Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(1, 0)
-
-        ViewBtn.MouseButton1Click:Connect(function()
-            Overlay.Enabled = true
-        end)
-
-        Bg.MouseButton1Click:Connect(function()
-            Overlay.Enabled = false
-        end)
-
-        CloseBtn.MouseButton1Click:Connect(function()
-            Overlay.Enabled = false
-        end)
-
-        Container.Destroying:Connect(function()
-            Overlay:Destroy()
-        end)
-    end
-
-    TweenService:Create(Container, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-    TweenService:Create(Stroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-    TweenService:Create(Img, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
-
-    Rayfield.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
-        Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
-        Stroke.Color = SelectedTheme.SecondaryElementStroke
-        if Container:FindFirstChild('Title') then
-            Container.Title.TextColor3 = SelectedTheme.TextColor
-        end
-    end)
-
-    function ImageV:Set(NewSettings)
-        NewSettings = NewSettings or {}
-        Img.Image = NewSettings.Image or ImageSettings.Image
-        Img.ScaleType = NewSettings.ScaleType or ImageSettings.ScaleType
-        if NewSettings.Size then
-            Img.Size = UDim2.new(1, -16, 0, NewSettings.Size.Y.Offset)
-            Container.Size = UDim2.new(1, -10, 0, NewSettings.Size.Y.Offset + titleOffset + 16)
-        end
-        if Container:FindFirstChild('Title') and NewSettings.Title then
-            Container.Title.Text = NewSettings.Title
-        end
-        ImageV.Settings = NewSettings
-    end
-
-    function ImageV:Destroy()
-        Container.Visible = false
-        Container:Destroy()
-    end
-
-    return ImageV
-end
--- Search
-function Tab:CreateSearchBar(SearchSettings)
-    SearchSettings = SearchSettings or {}
-    SearchSettings.PlaceholderText = SearchSettings.PlaceholderText or "Search..."
-    SearchSettings.Size = SearchSettings.Size or UDim2.new(1, -10, 0, 36)
-
-    local SearchV = { Settings = SearchSettings, CurrentValue = "" }
-
-    local Container = Instance.new("Frame")
-    Container.Name = "SearchElement"
-    Container.Size = SearchSettings.Size
-    Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
-    Container.BackgroundTransparency = 1
-    Container.BorderSizePixel = 0
-    Container.Parent = TabPage
-
-    local Stroke = Instance.new("UIStroke", Container)
-    Stroke.Color = SelectedTheme.SecondaryElementStroke
-    Stroke.Transparency = 1
-
-    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
-
-    local Box = Instance.new("TextBox", Container)
-    Box.Name = "Input"
-    Box.Size = UDim2.new(1, -20, 1, 0)
-    Box.Position = UDim2.new(0, 10, 0, 0)
-    Box.BackgroundTransparency = 1
-    Box.Text = ""
-    Box.PlaceholderText = SearchSettings.PlaceholderText
-    Box.PlaceholderColor3 = SelectedTheme.PlaceholderColor or Color3.fromRGB(150,150,150)
-    Box.TextColor3 = SelectedTheme.TextColor
-    Box.TextSize = 14
-    Box.Font = Enum.Font.Gotham
-    Box.TextXAlignment = Enum.TextXAlignment.Left
-    Box.ClearTextOnFocus = false
-    Box.TextTransparency = 1
-
-    -- Hover Effect
-    Container.MouseEnter:Connect(function()
-        TweenService:Create(Stroke, TweenInfo.new(0.2), {
-            Color = SelectedTheme.ElementStrokeHover or SelectedTheme.SecondaryElementStroke,
-            Transparency = 0
-        }):Play()
-    end)
-
-    Container.MouseLeave:Connect(function()
-        TweenService:Create(Stroke, TweenInfo.new(0.2), {
-            Color = SelectedTheme.SecondaryElementStroke,
-            Transparency = 0
-        }):Play()
-    end)
-
-    -- Fade In
-    TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
-        BackgroundTransparency = 0
-    }):Play()
-
-    TweenService:Create(Stroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
-        Transparency = 0
-    }):Play()
-
-    TweenService:Create(Box, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
-        TextTransparency = 0
-    }):Play()
-
-    -- Search Logic
-    Box:GetPropertyChangedSignal("Text"):Connect(function()
-        local query = Box.Text:lower()
-        SearchV.CurrentValue = Box.Text
-
-        for _, element in ipairs(TabPage:GetChildren()) do
-            if element == Container then continue end
-            if not element:IsA("Frame") then continue end
-
-            local titleLabel = element:FindFirstChild("Title")
-            if not titleLabel then
-                element.Visible = true
-                continue
-            end
-
-            element.Visible = (query == "") or (titleLabel.Text:lower():find(query, 1, true) ~= nil)
-        end
-    end)
-
-    Rayfield.Main:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
-        Container.BackgroundColor3 = SelectedTheme.SecondaryElementBackground
-        Stroke.Color = SelectedTheme.SecondaryElementStroke
-        Box.TextColor3 = SelectedTheme.TextColor
-    end)
-
-    function SearchV:Set(Value)
-        Box.Text = tostring(Value)
-    end
-
-    function SearchV:Clear()
-        Box.Text = ""
-    end
-
-    function SearchV:Destroy()
-        for _, element in ipairs(TabPage:GetChildren()) do
-            if element:IsA("Frame") then
-                element.Visible = true
-            end
-        end
-        Container:Destroy()
-    end
-
-    return SearchV
-end
 		-- Input
 		function Tab:CreateInput(InputSettings)
 			local Input = Elements.Template.Input:Clone()
