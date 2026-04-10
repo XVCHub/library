@@ -1620,7 +1620,7 @@ local function UnpackColor(Color)
 	return Color3.fromRGB(Color.R, Color.G, Color.B)
 end
 
-function tween(object, goal, callback, tweenin)
+local _tween = function(object, goal, callback, tweenin)
     local t = TweenService:Create(object, tweenin or TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), goal)
     t.Completed:Connect(callback or function() end)
     t:Play()
@@ -1850,19 +1850,19 @@ local function Hide(Window, bind, notif)
 		end
 	end
 end
-	tween(Window, {BackgroundTransparency = 1})
-	tween(Window.Elements, {BackgroundTransparency = 1})
-	tween(Window.Line, {BackgroundTransparency = 1})
-	tween(Window.Title.Title, {TextTransparency = 1})
-	tween(Window.Title.subtitle, {TextTransparency = 1})
-	tween(Window.Logo, {ImageTransparency = 1})
-	tween(Window.Navigation.Line, {BackgroundTransparency = 1})
+	_tween(Window, {BackgroundTransparency = 1})
+	_tween(Window.Elements, {BackgroundTransparency = 1})
+	_tween(Window.Line, {BackgroundTransparency = 1})
+	_tween(Window.Title.Title, {TextTransparency = 1})
+	_tween(Window.Title.subtitle, {TextTransparency = 1})
+	_tween(Window.Logo, {ImageTransparency = 1})
+	_tween(Window.Navigation.Line, {BackgroundTransparency = 1})
 
 	for _, TopbarButton in ipairs(Window.Controls:GetChildren()) do
 		if TopbarButton.ClassName == "Frame" then
-			tween(TopbarButton, {BackgroundTransparency = 1})
-			tween(TopbarButton.UIStroke, {Transparency = 1})
-			tween(TopbarButton.ImageLabel, {ImageTransparency = 1})
+			_tween(TopbarButton, {BackgroundTransparency = 1})
+			_tween(TopbarButton.UIStroke, {Transparency = 1})
+			_tween(TopbarButton.ImageLabel, {ImageTransparency = 1})
 			TopbarButton.Visible = false
 		end
 	end
@@ -1883,13 +1883,16 @@ end
 	Window.Visible = false
 end
 
-local COREGUI = cloneref(game:GetService("CoreGui"))
-local LPLR = cloneref(game:GetService("Players")).LocalPlayer
-local RPLR = cloneref(game:GetService("Players")):FindFirstChildWhichIsA("Player")
-local STUDIO = cloneref(game:GetService("RunService")):IsStudio()
-local HUI = get_hidden_gui or gethui
-
 local function PROTECT_UI(G)
+    BLANK = function(...) return ... end
+    CLONEREF = cloneref or BLANK
+
+    local COREGUI = CLONEREF(game:GetService("CoreGui"))
+    local LPLR = CLONEREF(game:GetService("Players")).LocalPlayer
+    local RPLR = CLONEREF(game:GetService("Players")):FindFirstChildWhichIsA("Player")
+    local STUDIO = CLONEREF(game:GetService("RunService")):IsStudio()
+    local HUI = get_hidden_gui or gethui
+
     G.Name = "\0"
     G.Archivable = false
 
@@ -1933,6 +1936,7 @@ local function PROTECT_UI(G)
 
     return G
 end
+
 PROTECT_UI(LunaUI)
 LunaUI.Enabled = false
 LunaUI.SmartWindow.Visible = false
@@ -2191,20 +2195,20 @@ local function Unhide(Window, currentTab)
 	Window.Elements.Visible = true
 	Window.Visible = true
 	task.wait()
-	tween(Window, {BackgroundTransparency = 0.2})
-	tween(Window.Elements, {BackgroundTransparency = 0.08})
-	tween(Window.Line, {BackgroundTransparency = 0})
-	tween(Window.Title.Title, {TextTransparency = 0})
-	tween(Window.Title.subtitle, {TextTransparency = 0})
-	tween(Window.Logo, {ImageTransparency = 0})
-	tween(Window.Navigation.Line, {BackgroundTransparency = 0})
+	_tween(Window, {BackgroundTransparency = 0.2})
+	_tween(Window.Elements, {BackgroundTransparency = 0.08})
+	_tween(Window.Line, {BackgroundTransparency = 0})
+	_tween(Window.Title.Title, {TextTransparency = 0})
+	_tween(Window.Title.subtitle, {TextTransparency = 0})
+	_tween(Window.Logo, {ImageTransparency = 0})
+	_tween(Window.Navigation.Line, {BackgroundTransparency = 0})
 
 	for _, TopbarButton in ipairs(Window.Controls:GetChildren()) do
 		if TopbarButton.ClassName == "Frame" and TopbarButton.Name ~= "Theme" then
 			TopbarButton.Visible = true
-			tween(TopbarButton, {BackgroundTransparency = 0.25})
-			tween(TopbarButton.UIStroke, {Transparency = 0.5})
-			tween(TopbarButton.ImageLabel, {ImageTransparency = 0.25})
+			_tween(TopbarButton, {BackgroundTransparency = 0.25})
+			_tween(TopbarButton.UIStroke, {Transparency = 0.5})
+			_tween(TopbarButton.ImageLabel, {ImageTransparency = 0.25})
 		end
 	end
 	for _, tabbtn in ipairs(Window.Navigation.Tabs:GetChildren()) do
@@ -2232,7 +2236,7 @@ end
 
 local function Maximise(Window)
 	Window.Controls.ToggleSize.ImageLabel.Image = "rbxassetid://10137941941"
-	tween(Window, {Size = MainSize})
+	_tween(Window, {Size = MainSize})
 	Window.Elements.Visible = true
 	Window.Navigation.Visible = true
 end
@@ -2241,7 +2245,7 @@ local function Minimize(Window)
 	Window.Controls.ToggleSize.ImageLabel.Image = "rbxassetid://11036884234"
 	Window.Elements.Visible = false
 	Window.Navigation.Visible = false
-	tween(Window, {Size = MinSize})
+	_tween(Window, {Size = MinSize})
 end
 
 
@@ -2299,7 +2303,7 @@ function Luna:CreateWindow(WindowSettings)
 	LoadingFrame.Version.TextTransparency = 1
 	LoadingFrame.Frame.ImageLabel.ImageTransparency = 1
 
-	tween(Elements.Parent, {BackgroundTransparency = 1})
+	_tween(Elements.Parent, {BackgroundTransparency = 1})
 	Elements.Parent.Visible = false
 
 	LoadingFrame.Frame.Frame.Title.Text = WindowSettings.LoadingTitle
@@ -2434,20 +2438,20 @@ function Luna:CreateWindow(WindowSettings)
 					for _, instance in pairs(KeySystem:GetDescendants()) do
 						if instance.ClassName ~= "UICorner" and instance.ClassName ~= "UIPadding" then
 							if instance.ClassName ~= "UIStroke" and instance.ClassName ~= "UIListLayout" then
-								tween(instance, {BackgroundTransparency = 1}, nil,TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
+								_tween(instance, {BackgroundTransparency = 1}, nil,TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
 							end
 							if instance.ClassName == "ImageButton" then
-								tween(instance, {ImageTransparency = 1}, nil,TweenInfo.new(0.5, Enum.EasingStyle.Exponential))
+								_tween(instance, {ImageTransparency = 1}, nil,TweenInfo.new(0.5, Enum.EasingStyle.Exponential))
 							end
 							if instance.ClassName == "TextLabel" then
-								tween(instance, {TextTransparency = 1}, nil,TweenInfo.new(0.4, Enum.EasingStyle.Exponential))
+								_tween(instance, {TextTransparency = 1}, nil,TweenInfo.new(0.4, Enum.EasingStyle.Exponential))
 							end
 							if instance.ClassName == "UIStroke" then
-								tween(instance, {Transparency = 1}, nil,TweenInfo.new(0.5, Enum.EasingStyle.Exponential))
+								_tween(instance, {Transparency = 1}, nil,TweenInfo.new(0.5, Enum.EasingStyle.Exponential))
 							end
 						end
 					end
-					tween(KeySystem, {BackgroundTransparency = 1}, nil,TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
+					_tween(KeySystem, {BackgroundTransparency = 1}, nil,TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
 					task.wait(0.51)
 					Passthrough = true
 					KeySystem.Visible = false
@@ -2544,9 +2548,9 @@ function Luna:CreateWindow(WindowSettings)
 		HomeTabPage.Visible = true
 
 		function HomeTab:Activate()
-			tween(HomeTabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(255,255,255)})
-			tween(HomeTabButton, {BackgroundTransparency = 0})
-			tween(HomeTabButton.UIStroke, {Transparency = 0.41})
+			_tween(HomeTabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(255,255,255)})
+			_tween(HomeTabButton, {BackgroundTransparency = 0})
+			_tween(HomeTabButton.UIStroke, {Transparency = 0.41})
 
 			Elements.UIPageLayout:JumpTo(HomeTabPage)
 
@@ -2554,9 +2558,9 @@ function Luna:CreateWindow(WindowSettings)
 
 			for _, OtherTabButton in ipairs(Navigation.Tabs:GetChildren()) do
 				if OtherTabButton.Name ~= "InActive Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton ~= HomeTabButton then
-					tween(OtherTabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(221,221,221)})
-					tween(OtherTabButton, {BackgroundTransparency = 1})
-					tween(OtherTabButton.UIStroke, {Transparency = 1})
+					_tween(OtherTabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(221,221,221)})
+					_tween(OtherTabButton, {BackgroundTransparency = 1})
+					_tween(OtherTabButton.UIStroke, {Transparency = 1})
 				end
 
 			end
@@ -2735,9 +2739,9 @@ function Luna:CreateWindow(WindowSettings)
 		TabPage.Parent = Elements
 
 		function Tab:Activate()
-			tween(TabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(255,255,255)})
-			tween(TabButton, {BackgroundTransparency = 0})
-			tween(TabButton.UIStroke, {Transparency = 0.41})
+			_tween(TabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(255,255,255)})
+			_tween(TabButton, {BackgroundTransparency = 0})
+			_tween(TabButton.UIStroke, {Transparency = 0.41})
 
 			Elements.UIPageLayout:JumpTo(TabPage)
 
@@ -2745,9 +2749,9 @@ function Luna:CreateWindow(WindowSettings)
 
 			for _, OtherTabButton in ipairs(Navigation.Tabs:GetChildren()) do
 				if OtherTabButton.Name ~= "InActive Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton ~= TabButton then
-					tween(OtherTabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(221,221,221)})
-					tween(OtherTabButton, {BackgroundTransparency = 1})
-					tween(OtherTabButton.UIStroke, {Transparency = 1})
+					_tween(OtherTabButton.ImageLabel, {ImageColor3 = Color3.fromRGB(221,221,221)})
+					_tween(OtherTabButton, {BackgroundTransparency = 1})
+					_tween(OtherTabButton.UIStroke, {Transparency = 1})
 				end
 
 			end
@@ -2783,7 +2787,7 @@ function Luna:CreateWindow(WindowSettings)
 			local TabPage = Sectiont.Frame
 
 			Sectiont.TextTransparency = 1
-			tween(Sectiont, {TextTransparency = 0})
+			_tween(Sectiont, {TextTransparency = 0})
 
 			function Section:Set(NewSection)
 				Sectiont.Text = NewSection
@@ -2800,7 +2804,7 @@ function Luna:CreateWindow(WindowSettings)
 				b.Parent = TabPage
 				b.Size = UDim2.new(1,0,0,18)
 				b.Line.BackgroundTransparency = 1
-				tween(b.Line, {BackgroundTransparency = 0})
+				_tween(b.Line, {BackgroundTransparency = 0})
 			end
 
 			-- Button
@@ -2863,24 +2867,24 @@ function Luna:CreateWindow(WindowSettings)
 						TweenService:Create(Button, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
 						TweenService:Create(Button.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
 					else
-						tween(Button.UIStroke, {Color = Color3.fromRGB(136, 131, 163)})
+						_tween(Button.UIStroke, {Color = Color3.fromRGB(136, 131, 163)})
 						wait(0.2)
 						if ButtonV.Hover then
-							tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+							_tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 						else
-							tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+							_tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 						end
 					end
 				end)
 
 				Button["MouseEnter"]:Connect(function()
 					ButtonV.Hover = true
-					tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 
 				Button["MouseLeave"]:Connect(function()
 					ButtonV.Hover = false
-					tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 
 				function ButtonV:Set(ButtonSettings2)
@@ -2992,7 +2996,7 @@ function Luna:CreateWindow(WindowSettings)
 				function ParagraphV:Update()
 					Paragraph.Text.Size = UDim2.new(Paragraph.Text.Size.X.Scale, Paragraph.Text.Size.X.Offset, 0, math.huge)
 					Paragraph.Text.Size = UDim2.new(Paragraph.Text.Size.X.Scale, Paragraph.Text.Size.X.Offset, 0, Paragraph.Text.TextBounds.Y)
-					tween(Paragraph, {Size = UDim2.new(Paragraph.Size.X.Scale, Paragraph.Size.X.Offset, 0, Paragraph.Text.TextBounds.Y + 40)})
+					_tween(Paragraph, {Size = UDim2.new(Paragraph.Size.X.Scale, Paragraph.Size.X.Offset, 0, Paragraph.Text.TextBounds.Y + 40)})
 				end
 
 				function ParagraphV:Set(NewParagraphSettings)
@@ -3059,11 +3063,11 @@ function Luna:CreateWindow(WindowSettings)
 				SliderSettings.Callback(SliderSettings.CurrentValue)
 
 				Slider["MouseEnter"]:Connect(function()
-					tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 
 				Slider["MouseLeave"]:Connect(function()
-					tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 
 				Slider.Interact.InputBegan:Connect(function(Input)
@@ -3266,21 +3270,21 @@ function Luna:CreateWindow(WindowSettings)
 				local function Set(bool)
 					if bool then
 						Toggle.toggle.color.Enabled = true
-						tween(Toggle.toggle, {BackgroundTransparency = 0})
+						_tween(Toggle.toggle, {BackgroundTransparency = 0})
 
 						Toggle.toggle.UIStroke.color.Enabled = true
-						tween(Toggle.toggle.UIStroke, {Color = Color3.new(255,255,255)})
+						_tween(Toggle.toggle.UIStroke, {Color = Color3.new(255,255,255)})
 
-						tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(255,255,255), Position = UDim2.new(1,-23,0.5,0), BackgroundTransparency = 0.45})
+						_tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(255,255,255), Position = UDim2.new(1,-23,0.5,0), BackgroundTransparency = 0.45})
 					else
 						Toggle.toggle.color.Enabled = false
 						Toggle.toggle.UIStroke.color.Enabled = false
 
 						Toggle.toggle.UIStroke.Color = Color3.fromRGB(97,97,97)
 
-						tween(Toggle.toggle, {BackgroundTransparency = 1})
+						_tween(Toggle.toggle, {BackgroundTransparency = 1})
 
-						tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(97,97,97), Position = UDim2.new(0,5,0.5,0), BackgroundTransparency = 0})
+						_tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(97,97,97), Position = UDim2.new(0,5,0.5,0), BackgroundTransparency = 0})
 					end
 
 					ToggleV.CurrentValue = bool
@@ -3308,11 +3312,11 @@ function Luna:CreateWindow(WindowSettings)
 				end)
 
 				Toggle["MouseEnter"]:Connect(function()
-					tween(Toggle.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(Toggle.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 
 				Toggle["MouseLeave"]:Connect(function()
-					tween(Toggle.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(Toggle.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 
 				if ToggleSettings.CurrentValue then
@@ -3469,11 +3473,11 @@ function Luna:CreateWindow(WindowSettings)
 				end)
 
 				Bind["MouseEnter"]:Connect(function()
-					tween(Bind.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(Bind.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 
 				Bind["MouseLeave"]:Connect(function()
-					tween(Bind.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(Bind.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 				UserInputService.InputBegan:Connect(function(input, processed)
 
@@ -3740,11 +3744,11 @@ function Luna:CreateWindow(WindowSettings)
 				end)
 
 				Input["MouseEnter"]:Connect(function()
-					tween(Input.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(Input.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 
 				Input["MouseLeave"]:Connect(function()
-					tween(Input.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(Input.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 
 
@@ -3831,11 +3835,11 @@ function Luna:CreateWindow(WindowSettings)
 				local function Toggle()
 					opened = not opened
 					if opened then
-						tween(Dropdown.icon, {Rotation = 180})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
+						_tween(Dropdown.icon, {Rotation = 180})
+						_tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
 					else
-						tween(Dropdown.icon, {Rotation = 0})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
+						_tween(Dropdown.icon, {Rotation = 0})
+						_tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
 					end
 				end
 
@@ -3882,12 +3886,12 @@ function Luna:CreateWindow(WindowSettings)
 				local function ActivateColorSingle(name)
 					for _, Option in pairs(Dropdown.List:GetChildren()) do
 						if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
-							tween(Option, {BackgroundTransparency = 0.98})
+							_tween(Option, {BackgroundTransparency = 0.98})
 						end
 					end
 
 					Toggle()
-					tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
+					_tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
 				end
 
 				local function Refresh()
@@ -3905,13 +3909,13 @@ function Luna:CreateWindow(WindowSettings)
 									RemoveTable(DropdownSettings.CurrentOption, v)
 									DropdownV.CurrentOption = DropdownSettings.CurrentOption
 									if not optionhover then
-										tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+										_tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
 									end
-									tween(Option, {BackgroundTransparency = 0.98})
+									_tween(Option, {BackgroundTransparency = 0.98})
 								else
 									table.insert(DropdownSettings.CurrentOption, v)
 									DropdownV.CurrentOption = DropdownSettings.CurrentOption
-									tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+									_tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 								end
 								bleh = DropdownSettings.CurrentOption
 							else
@@ -3949,7 +3953,7 @@ function Luna:CreateWindow(WindowSettings)
 							if Option.BackgroundTransparency == 0.95 then
 								return
 							else
-								tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
+								_tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
 							end
 						end)
 						Option.MouseLeave:Connect(function()
@@ -3957,7 +3961,7 @@ function Luna:CreateWindow(WindowSettings)
 							if Option.BackgroundTransparency == 0.95 then
 								return
 							else
-								tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+								_tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
 							end
 						end)	
 					end
@@ -3978,11 +3982,11 @@ function Luna:CreateWindow(WindowSettings)
 				end)
 
 				Dropdown["MouseEnter"]:Connect(function()
-					tween(Dropdown.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(Dropdown.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 
 				Dropdown["MouseLeave"]:Connect(function()
-					tween(Dropdown.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(Dropdown.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 
 				if DropdownSettings.SpecialType == "Player" then
@@ -4018,10 +4022,10 @@ function Luna:CreateWindow(WindowSettings)
 				if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 				SafeCallback(bleh)
 				if type(bleh) == "string" then 
-					tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+					_tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 				else
 					for i,v in pairs(bleh) do
-						tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+						_tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 					end
 				end
 
@@ -4039,7 +4043,7 @@ function Luna:CreateWindow(WindowSettings)
 						Dropdown.Selected.PlaceholderText = "None"
 					end
 					for _, name in pairs(DropdownSettings.CurrentOption) do
-						tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+						_tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 					end
 				else
 					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
@@ -4091,10 +4095,10 @@ function Luna:CreateWindow(WindowSettings)
 					SafeCallback(bleh)
 					for _, Option in pairs(Dropdown.List:GetChildren()) do
 						if Option.ClassName == "TextLabel" then
-							tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
+							_tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
 						end
 					end
-					tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+					_tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 
 					if DropdownSettings.MultipleOptions then
 						if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
@@ -4110,7 +4114,7 @@ function Luna:CreateWindow(WindowSettings)
 							Dropdown.Selected.PlaceholderText = "None"
 						end
 						for _, name in pairs(DropdownSettings.CurrentOption) do
-							tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+							_tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 						end
 					else
 						Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
@@ -4174,10 +4178,10 @@ function Luna:CreateWindow(WindowSettings)
 				Display.BackgroundTransparency = 0
 
 				ColorPicker["MouseEnter"]:Connect(function()
-					tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+					_tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 				end)
 				ColorPicker["MouseLeave"]:Connect(function()
-					tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+					_tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 				end)
 
 				local function SafeCallback(param, c2)
@@ -4210,14 +4214,14 @@ function Luna:CreateWindow(WindowSettings)
 				ColorPicker.Interact.MouseButton1Down:Connect(function()
 					if not opened then
 						opened = true 
-						tween(ColorPicker, {Size = UDim2.new( 1.042, -25,0, 165)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
-						tween(Background, {Size = openedsize})
-						tween(Display, {BackgroundTransparency = 1})
+						_tween(ColorPicker, {Size = UDim2.new( 1.042, -25,0, 165)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
+						_tween(Background, {Size = openedsize})
+						_tween(Display, {BackgroundTransparency = 1})
 					else
 						opened = false
-						tween(ColorPicker, {Size = UDim2.new(1.042, -25,0, 38)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
-						tween(Background, {Size = closedsize})
-						tween(Display, {BackgroundTransparency = 0})
+						_tween(ColorPicker, {Size = UDim2.new(1.042, -25,0, 38)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
+						_tween(Background, {Size = closedsize})
+						_tween(Display, {BackgroundTransparency = 0})
 					end
 				end)
 				UserInputService.InputEnded:Connect(function(input, gameProcessed) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then 
@@ -4393,7 +4397,7 @@ function Luna:CreateWindow(WindowSettings)
 			local b = Elements.Template.Divider:Clone()
 			b.Parent = TabPage
 			b.Line.BackgroundTransparency = 1
-			tween(b.Line, {BackgroundTransparency = 0})
+			_tween(b.Line, {BackgroundTransparency = 0})
 		end
 
 		-- Button
@@ -4455,24 +4459,24 @@ function Luna:CreateWindow(WindowSettings)
 					TweenService:Create(Button, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
 					TweenService:Create(Button.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
 				else
-					tween(Button.UIStroke, {Color = Color3.fromRGB(136, 131, 163)})
+					_tween(Button.UIStroke, {Color = Color3.fromRGB(136, 131, 163)})
 					wait(0.2)
 					if ButtonV.Hover then
-						tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+						_tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 					else
-						tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+						_tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 					end
 				end
 			end)
 
 			Button["MouseEnter"]:Connect(function()
 				ButtonV.Hover = true
-				tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Button.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Button["MouseLeave"]:Connect(function()
 				ButtonV.Hover = false
-				tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Button.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 
 			function ButtonV:Set(ButtonSettings2)
@@ -4582,7 +4586,7 @@ function Luna:CreateWindow(WindowSettings)
 			function ParagraphV:Update()
 				Paragraph.Text.Size = UDim2.new(Paragraph.Text.Size.X.Scale, Paragraph.Text.Size.X.Offset, 0, math.huge)
 				Paragraph.Text.Size = UDim2.new(Paragraph.Text.Size.X.Scale, Paragraph.Text.Size.X.Offset, 0, Paragraph.Text.TextBounds.Y)
-				tween(Paragraph, {Size = UDim2.new(Paragraph.Size.X.Scale, Paragraph.Size.X.Offset, 0, Paragraph.Text.TextBounds.Y + 40)})
+				_tween(Paragraph, {Size = UDim2.new(Paragraph.Size.X.Scale, Paragraph.Size.X.Offset, 0, Paragraph.Text.TextBounds.Y + 40)})
 			end
 
 			function ParagraphV:Set(NewParagraphSettings)
@@ -4742,7 +4746,7 @@ function Tab:CreateImage(ImageSettings)
         Img.ScaleType = NewSettings.ScaleType
         ImgCorner.CornerRadius = NewSettings.CornerRadius
         local tOff = if NewSettings.Title ~= "" then 36 else 0
-        tween(Container, {Size = UDim2.new(1, 0, 0, NewSettings.Size.Y.Offset + tOff + 16)})
+        _tween(Container, {Size = UDim2.new(1, 0, 0, NewSettings.Size.Y.Offset + tOff + 16)})
     end
 
     function ImageV:Destroy()
@@ -4793,10 +4797,10 @@ function Tab:CreateSearchBar(SearchSettings)
     Box.ClearTextOnFocus = false
 
     Container.MouseEnter:Connect(function()
-        tween(Stroke, {Color = Color3.fromRGB(87, 84, 104), Transparency = 0})
+        _tween(Stroke, {Color = Color3.fromRGB(87, 84, 104), Transparency = 0})
     end)
     Container.MouseLeave:Connect(function()
-        tween(Stroke, {Color = Color3.fromRGB(64, 61, 76), Transparency = 0.5})
+        _tween(Stroke, {Color = Color3.fromRGB(64, 61, 76), Transparency = 0.5})
     end)
 
     Container.BackgroundTransparency = 1
@@ -4878,11 +4882,11 @@ end
 			SliderSettings.Callback(SliderSettings.CurrentValue)
 
 			Slider["MouseEnter"]:Connect(function()
-				tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Slider["MouseLeave"]:Connect(function()
-				tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 
 			Slider.Interact.InputBegan:Connect(function(Input)
@@ -5084,21 +5088,21 @@ end
 			local function Set(bool)
 				if bool then
 					Toggle.toggle.color.Enabled = true
-					tween(Toggle.toggle, {BackgroundTransparency = 0})
+					_tween(Toggle.toggle, {BackgroundTransparency = 0})
 
 					Toggle.toggle.UIStroke.color.Enabled = true
-					tween(Toggle.toggle.UIStroke, {Color = Color3.new(255,255,255)})
+					_tween(Toggle.toggle.UIStroke, {Color = Color3.new(255,255,255)})
 
-					tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(255,255,255), Position = UDim2.new(1,-23,0.5,0), BackgroundTransparency = 0.45})
+					_tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(255,255,255), Position = UDim2.new(1,-23,0.5,0), BackgroundTransparency = 0.45})
 				else
 					Toggle.toggle.color.Enabled = false
 					Toggle.toggle.UIStroke.color.Enabled = false
 
 					Toggle.toggle.UIStroke.Color = Color3.fromRGB(97,97,97)
 
-					tween(Toggle.toggle, {BackgroundTransparency = 1})
+					_tween(Toggle.toggle, {BackgroundTransparency = 1})
 
-					tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(97,97,97), Position = UDim2.new(0,5,0.5,0), BackgroundTransparency = 0})
+					_tween(Toggle.toggle.val, {BackgroundColor3 = Color3.fromRGB(97,97,97), Position = UDim2.new(0,5,0.5,0), BackgroundTransparency = 0})
 				end
 
 				ToggleV.CurrentValue = bool
@@ -5126,11 +5130,11 @@ end
 			end)
 
 			Toggle["MouseEnter"]:Connect(function()
-				tween(Toggle.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Toggle.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Toggle["MouseLeave"]:Connect(function()
-				tween(Toggle.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Toggle.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 
 			if ToggleSettings.CurrentValue then
@@ -5286,11 +5290,11 @@ end
 			end)
 
 			Bind["MouseEnter"]:Connect(function()
-				tween(Bind.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Bind.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Bind["MouseLeave"]:Connect(function()
-				tween(Bind.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Bind.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 			UserInputService.InputBegan:Connect(function(input, processed)
 
@@ -5499,11 +5503,11 @@ end
 			end)
 
 			Bind["MouseEnter"]:Connect(function()
-				tween(Bind.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Bind.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Bind["MouseLeave"]:Connect(function()
-				tween(Bind.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Bind.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 			UserInputService.InputBegan:Connect(function(input, processed)
 
@@ -5750,11 +5754,11 @@ end
 			end)
 
 			Input["MouseEnter"]:Connect(function()
-				tween(Input.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Input.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Input["MouseLeave"]:Connect(function()
-				tween(Input.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Input.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 
 
@@ -5840,11 +5844,11 @@ end
 			local function Toggle()
 				opened = not opened
 				if opened then
-					tween(Dropdown.icon, {Rotation = 180})
-					tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
+					_tween(Dropdown.icon, {Rotation = 180})
+					_tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
 				else
-					tween(Dropdown.icon, {Rotation = 0})
-					tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
+					_tween(Dropdown.icon, {Rotation = 0})
+					_tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
 				end
 			end
 
@@ -5891,12 +5895,12 @@ end
 			local function ActivateColorSingle(name)
 				for _, Option in pairs(Dropdown.List:GetChildren()) do
 					if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
-						tween(Option, {BackgroundTransparency = 0.98})
+						_tween(Option, {BackgroundTransparency = 0.98})
 					end
 				end
 
 				Toggle()
-				tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
+				_tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
 			end
 
 			local function Refresh()
@@ -5914,13 +5918,13 @@ end
 								RemoveTable(DropdownSettings.CurrentOption, v)
 								DropdownV.CurrentOption = DropdownSettings.CurrentOption
 								if not optionhover then
-									tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+									_tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
 								end
-								tween(Option, {BackgroundTransparency = 0.98})
+								_tween(Option, {BackgroundTransparency = 0.98})
 							else
 								table.insert(DropdownSettings.CurrentOption, v)
 								DropdownV.CurrentOption = DropdownSettings.CurrentOption
-								tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+								_tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 							end
 							bleh = DropdownSettings.CurrentOption
 						else
@@ -5958,7 +5962,7 @@ end
 						if Option.BackgroundTransparency == 0.95 then
 							return
 						else
-							tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
+							_tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
 						end
 					end)
 					Option.MouseLeave:Connect(function()
@@ -5966,7 +5970,7 @@ end
 						if Option.BackgroundTransparency == 0.95 then
 							return
 						else
-							tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+							_tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
 						end
 					end)	
 				end
@@ -5987,11 +5991,11 @@ end
 			end)
 
 			Dropdown["MouseEnter"]:Connect(function()
-				tween(Dropdown.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(Dropdown.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 
 			Dropdown["MouseLeave"]:Connect(function()
-				tween(Dropdown.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(Dropdown.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 
 			if DropdownSettings.SpecialType == "Player" then
@@ -6027,10 +6031,10 @@ end
 			if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 			SafeCallback(bleh)
 			if type(bleh) == "string" then 
-				tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+				_tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 			else
 				for i,v in pairs(bleh) do
-					tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+					_tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 				end
 			end
 
@@ -6048,7 +6052,7 @@ end
 					Dropdown.Selected.PlaceholderText = "None"
 				end
 				for _, name in pairs(DropdownSettings.CurrentOption) do
-					tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+					_tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 				end
 			else
 				Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
@@ -6100,10 +6104,10 @@ end
 				SafeCallback(bleh)
 				for _, Option in pairs(Dropdown.List:GetChildren()) do
 					if Option.ClassName == "TextLabel" then
-						tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
+						_tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
 					end
 				end
-				tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+				_tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 
 				if DropdownSettings.MultipleOptions then
 					if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
@@ -6119,7 +6123,7 @@ end
 						Dropdown.Selected.PlaceholderText = "None"
 					end
 					for _, name in pairs(DropdownSettings.CurrentOption) do
-						tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+						_tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 					end
 				else
 					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
@@ -6182,10 +6186,10 @@ end
 			Display.BackgroundTransparency = 0
 
 			ColorPicker["MouseEnter"]:Connect(function()
-				tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				_tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
 			end)
 			ColorPicker["MouseLeave"]:Connect(function()
-				tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				_tween(ColorPicker.UIStroke, {Color = Color3.fromRGB(64,61,76)})
 			end)
 
 			local function SafeCallback(param, c2)
@@ -6218,14 +6222,14 @@ end
 			ColorPicker.Interact.MouseButton1Down:Connect(function()
 				if not opened then
 					opened = true 
-					tween(ColorPicker, {Size = UDim2.new( 1.042, -25,0, 165)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
-					tween(Background, {Size = openedsize})
-					tween(Display, {BackgroundTransparency = 1})
+					_tween(ColorPicker, {Size = UDim2.new( 1.042, -25,0, 165)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
+					_tween(Background, {Size = openedsize})
+					_tween(Display, {BackgroundTransparency = 1})
 				else
 					opened = false
-					tween(ColorPicker, {Size = UDim2.new(1.042, -25,0, 38)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
-					tween(Background, {Size = closedsize})
-					tween(Display, {BackgroundTransparency = 0})
+					_tween(ColorPicker, {Size = UDim2.new(1.042, -25,0, 38)}, nil, TweenInfo.new(0.6, Enum.EasingStyle.Exponential))
+					_tween(Background, {Size = closedsize})
+					_tween(Display, {BackgroundTransparency = 0})
 				end
 			end)
 			UserInputService.InputEnded:Connect(function(input, gameProcessed) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then 
@@ -6880,16 +6884,16 @@ end
 
 
 	Elements.Parent.Visible = true
-	tween(Elements.Parent, {BackgroundTransparency = 0.1})
+	_tween(Elements.Parent, {BackgroundTransparency = 0.1})
 	Navigation.Visible = true
-	tween(Navigation.Line, {BackgroundTransparency = 0})
+	_tween(Navigation.Line, {BackgroundTransparency = 0})
 
 	for _, TopbarButton in ipairs(Main.Controls:GetChildren()) do
 		if TopbarButton.ClassName == "Frame" and TopbarButton.Name ~= "Theme" then
 			TopbarButton.Visible = true
-			tween(TopbarButton, {BackgroundTransparency = 0.25})
-			tween(TopbarButton.UIStroke, {Transparency = 0.5})
-			tween(TopbarButton.ImageLabel, {ImageTransparency = 0.25})
+			_tween(TopbarButton, {BackgroundTransparency = 0.25})
+			_tween(TopbarButton.UIStroke, {Transparency = 0.5})
+			_tween(TopbarButton.ImageLabel, {ImageTransparency = 0.25})
 		end
 	end
 
@@ -6902,10 +6906,10 @@ end
 		end
 	end)
 	Main.Controls.Close["MouseEnter"]:Connect(function()
-		tween(Main.Controls.Close.ImageLabel, {ImageColor3 = Color3.new(1,1,1)})
+		_tween(Main.Controls.Close.ImageLabel, {ImageColor3 = Color3.new(1,1,1)})
 	end)
 	Main.Controls.Close["MouseLeave"]:Connect(function()
-		tween(Main.Controls.Close.ImageLabel, {ImageColor3 = Color3.fromRGB(195,195,195)})
+		_tween(Main.Controls.Close.ImageLabel, {ImageColor3 = Color3.fromRGB(195,195,195)})
 	end)
 
 	UserInputService.InputBegan:Connect(function(input, gpe)
@@ -6921,11 +6925,11 @@ end
 
 	Main.Logo.MouseButton1Click:Connect(function()
 		if Navigation.Size.X.Offset == 205 then
-			tween(Elements.Parent, {Size = UDim2.new(1, -55, Elements.Parent.Size.Y.Scale, Elements.Parent.Size.Y.Offset)})
-			tween(Navigation, {Size = UDim2.new(Navigation.Size.X.Scale, 55, Navigation.Size.Y.Scale, Navigation.Size.Y.Offset)})
+			_tween(Elements.Parent, {Size = UDim2.new(1, -55, Elements.Parent.Size.Y.Scale, Elements.Parent.Size.Y.Offset)})
+			_tween(Navigation, {Size = UDim2.new(Navigation.Size.X.Scale, 55, Navigation.Size.Y.Scale, Navigation.Size.Y.Offset)})
 		else
-			tween(Elements.Parent, {Size = UDim2.new(1, -205, Elements.Parent.Size.Y.Scale, Elements.Parent.Size.Y.Offset)})
-			tween(Navigation, {Size = UDim2.new(Navigation.Size.X.Scale, 205, Navigation.Size.Y.Scale, Navigation.Size.Y.Offset)})
+			_tween(Elements.Parent, {Size = UDim2.new(1, -205, Elements.Parent.Size.Y.Scale, Elements.Parent.Size.Y.Offset)})
+			_tween(Navigation, {Size = UDim2.new(Navigation.Size.X.Scale, 205, Navigation.Size.Y.Scale, Navigation.Size.Y.Offset)})
 		end
 	end)
 
@@ -6940,10 +6944,10 @@ end
 		end
 	end)
 	Main.Controls.ToggleSize["MouseEnter"]:Connect(function()
-		tween(Main.Controls.ToggleSize.ImageLabel, {ImageColor3 = Color3.new(1,1,1)})
+		_tween(Main.Controls.ToggleSize.ImageLabel, {ImageColor3 = Color3.new(1,1,1)})
 	end)
 	Main.Controls.ToggleSize["MouseLeave"]:Connect(function()
-		tween(Main.Controls.ToggleSize.ImageLabel, {ImageColor3 = Color3.fromRGB(195,195,195)})
+		_tween(Main.Controls.ToggleSize.ImageLabel, {ImageColor3 = Color3.fromRGB(195,195,195)})
 	end)
 
 	Main.Controls.Theme.ImageLabel.MouseButton1Click:Connect(function()
@@ -6953,10 +6957,10 @@ end
 		end
 	end)
 	Main.Controls.Theme["MouseEnter"]:Connect(function()
-		tween(Main.Controls.Theme.ImageLabel, {ImageColor3 = Color3.new(1,1,1)})
+		_tween(Main.Controls.Theme.ImageLabel, {ImageColor3 = Color3.new(1,1,1)})
 	end)
 	Main.Controls.Theme["MouseLeave"]:Connect(function()
-		tween(Main.Controls.Theme.ImageLabel, {ImageColor3 = Color3.fromRGB(195,195,195)})
+		_tween(Main.Controls.Theme.ImageLabel, {ImageColor3 = Color3.fromRGB(195,195,195)})
 	end)	
 
 
