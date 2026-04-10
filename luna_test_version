@@ -1621,9 +1621,10 @@ local function UnpackColor(Color)
 end
 
 function tween(object, goal, callback, tweenin)
-	local tween = TweenService:Create(object,tweenin or tweeninfo, goal)
-	tween.Completed:Connect(callback or function() end)
-	tween:Play()
+    local t = TweenService:Create(object, tweenin or TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), goal)
+    t.Completed:Connect(callback or function() end)
+    t:Play()
+    return t
 end
 
 local function BlurModule(Frame)
@@ -1836,7 +1837,7 @@ end
 
 -- Interface Management
 local LunaUI = isStudio and script.Parent:WaitForChild("Luna UI") or game:GetObjects("rbxassetid://131710748496660")[1]
-print("success")
+
 local SizeBleh = nil
 
 local function Hide(Window, bind, notif)
