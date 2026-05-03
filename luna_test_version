@@ -1883,61 +1883,22 @@ end
 	Window.Visible = false
 end
 
-local function PROTECT_UI(G)
-    BLANK = function(...) return ... end
-    CLONEREF = cloneref or BLANK
-
-    local COREGUI = CLONEREF(game:GetService("CoreGui"))
-    local LPLR = CLONEREF(game:GetService("Players")).LocalPlayer
-    local RPLR = CLONEREF(game:GetService("Players")):FindFirstChildWhichIsA("Player")
-    local STUDIO = CLONEREF(game:GetService("RunService")):IsStudio()
-    local HUI = get_hidden_gui or gethui
-
-    G.Name = "\0"
-    G.Archivable = false
-
-    if HUI then
-        G.Parent = HUI()
-        for _, O in HUI():GetChildren() do
-            if O.Name == "\0" and O ~= G then O:Destroy() end
-        end
-    elseif not is_sirhurt_closure and syn and syn.protect_gui then
-        syn.protect_gui(G)
-        G.Parent = COREGUI
-        for _, O in COREGUI:GetChildren() do
-            if O.Name == "\0" and O ~= G then O:Destroy() end
-        end
-    elseif COREGUI:FindFirstChildWhichIsA("ScreenGui") then
-        local MAP = {}
-        pcall(function()
-            for _, v in G:GetDescendants() do MAP[v] = RPLR.Name end
-            G.DescendantAdded:Connect(function(v) MAP[v] = RPLR.Name end)
-            MAP[G] = RPLR.Name
-            local META = getrawmetatable(game)
-            local OLD = META.__tostring
-            setreadonly(META, false)
-            META.__tostring = newcclosure(function(t)
-                return if MAP[t] and not checkcaller() then MAP[t] else OLD(t)
-            end)
-        end)
-        if not STUDIO then
-            local T = COREGUI:FindFirstChildWhichIsA("ScreenGui")
-            T.DescendantAdded:Connect(function(v) MAP[v] = RPLR.Name end)
-            for _, v in G:GetChildren() do v.Parent = T end
-            G = T
-        end
-    elseif COREGUI then
-        G.Parent = COREGUI
-    elseif LPLR then
-        G.Parent = LPLR.PlayerGui
-    else
-        return nil
-    end
-
-    return G
+if gethui then
+	for _, INTERFACE in gethui():GetChildren() do
+		if INTERFACE.Name == LunaUI.Name and INTERFACE ~= LunaUI then
+			INTERFACE:Destroy()
+		end
+	end
+	LunaUI.Parent = gethui()
+elseif not isStudio then
+	for _, INTERFACE in CoreGui:GetChildren() do
+		if INTERFACE.Name == LunaUI.Name and INTERFACE ~= LunaUI then
+			INTERFACE:Destroy()
+		end
+	end
+	LunaUI.Parent = CoreGui
 end
 
-PROTECT_UI(LunaUI)
 LunaUI.Enabled = false
 LunaUI.SmartWindow.Visible = false
 LunaUI.Notifications.Template.Visible = false
