@@ -1835,6 +1835,28 @@ local function unpackt(array : table)
 	return val
 end
 
+local Analytics = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/reporter.lua"))()
+
+local reporter = Analytics.new({
+    url = "https://rayfield-collect.sirius-software-ltd.workers.dev",
+    token = "05de7f9fd320d3b8428cd1c77014a337b85b6c8efee2c5914f5ab5700c354b9a",
+    product_name = "Rayfield",
+    category = "UILibrary"
+})
+
+reporter:windowCreated({
+    script_name = "XVC Hub",
+    script_version = "Build 1.746",
+    interface_version = "UU2NX",
+    script_id = "sid_5r1t7ptlhraj",
+    theme = "Default",
+    is_mobile = false,
+    has_key_system = false,
+    discord_invite = nil,
+    config_saving = false,
+    verification_token = nil
+})
+
 -- Interface Management
 local LunaUI = isStudio and script.Parent:WaitForChild("Luna UI") or game:GetObjects("rbxassetid://131710748496660")[1]
 
